@@ -27,6 +27,12 @@ public class CreateDatabase {
     }
 
     private static void createTables() {
+    	
+    	String dropUsersTable = "DROP TABLE IF EXISTS users;";
+    	String dropBooksTable = "DROP TABLE IF EXISTS books;";
+    	String dropOrdersTable = "DROP TABLE IF EXISTS orders;";
+    	String dropOrderDetailsTable = "DROP TABLE IF EXISTS order_details;";
+    	
         String usersTable = "CREATE TABLE IF NOT EXISTS users (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "username TEXT NOT NULL UNIQUE," +
@@ -65,6 +71,10 @@ public class CreateDatabase {
         try (Connection conn = DriverManager.getConnection(DATABASE_URL);
              Statement stmt = conn.createStatement()) {
 
+        	stmt.execute(dropUsersTable);
+        	stmt.execute(dropBooksTable);
+        	stmt.execute(dropOrdersTable);
+        	stmt.execute(dropOrderDetailsTable);
             stmt.execute(usersTable);
             stmt.execute(booksTable); // Add this line to create the books table
             stmt.execute(ordersTable);
