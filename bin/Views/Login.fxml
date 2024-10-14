@@ -44,9 +44,9 @@
    <center>
       <AnchorPane prefHeight="600.0" prefWidth="443.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField layoutX="67.0" layoutY="229.0" prefHeight="38.0" prefWidth="286.0" promptText="Username" style="-fx-background-color: F5F5F5;" />
-            <PasswordField layoutX="66.0" layoutY="334.0" prefHeight="38.0" prefWidth="289.0" promptText="Password" style="-fx-background-color: F5F5F5;" />
-            <Button layoutX="176.0" layoutY="451.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="95.0" style="-fx-background-color: black;" text="Log In" textFill="WHITE">
+            <TextField fx:id="usernamelogin" layoutX="67.0" layoutY="229.0" prefHeight="38.0" prefWidth="286.0" promptText="Username" style="-fx-background-color: F5F5F5;" />
+            <PasswordField fx:id="passwordlogin" layoutX="66.0" layoutY="334.0" prefHeight="38.0" prefWidth="289.0" promptText="Password" style="-fx-background-color: F5F5F5;" />
+            <Button fx:id="btnlogin" layoutX="176.0" layoutY="451.0" mnemonicParsing="false" onAction="#loginManager" prefHeight="46.0" prefWidth="95.0" style="-fx-background-color: black;" text="Log In" textFill="WHITE">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
