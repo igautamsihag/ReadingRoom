@@ -4,11 +4,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import Model.BookRegistration;
+
 public class CreateDatabase {
     private static final String DATABASE_URL = "jdbc:sqlite:readingroom.db";
 
     public static void main(String[] args) {
         setupDatabase();
+        BookRegistration bookRegistration = new BookRegistration();
+        bookRegistration.registerBooks();
     }
 
     public static void setupDatabase() {
@@ -45,7 +49,7 @@ public class CreateDatabase {
                 "book_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "title TEXT NOT NULL UNIQUE," +
                 "author TEXT NOT NULL," +
-                "price REAL NOT NULL," +
+                "price INTEGER NOT NULL," +
                 "quantity INTEGER NOT NULL," +
                 "sold INTEGER NOT NULL" +
                 ");";
