@@ -9,107 +9,49 @@ import javafx.fxml.FXMLLoader;
 
 public class DashboardController {
 
-	@FXML
+    @FXML
     private Button btnlogout;
-	
-	@FXML
-	private Button btnexport;
-	
-	@FXML
-	private Button btncart;
-	
-//	@FXML
-//    public void initialize() {
-//		System.out.println("Initializing DashboardController");
-//        btnlogout.setOnAction(event -> goToLogOut());
-//        btnexport.setOnAction(event -> goToExport());
-//        btncart.setOnAction(event -> goToCart());
-//    }
-	
+    
+    @FXML
+    private Button btnexport;
+    
+    @FXML
+    private Button btncart;
+    
+    @FXML
+    private Button btncheck;
+    
 
-//	public void goToLogOut() {
-//		System.out.println("Logout button clicked!");
-//        try {
-//            Parent dashboardPage = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
-//            Stage stage = (Stage) btnlogout.getScene().getWindow();
-//            stage.setScene(new Scene(dashboardPage));
-//            stage.show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//	
-//	public void goToExport() {
-//        try {
-//            Parent dashboardPage = FXMLLoader.load(getClass().getResource("/Views/Export.fxml"));
-//            Stage stage = (Stage) btnexport.getScene().getWindow();
-//            stage.setScene(new Scene(dashboardPage));
-//            stage.show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-//	
-//	public void goToCart() {
-//        try {
-//            Parent dashboardPage = FXMLLoader.load(getClass().getResource("/Views/Cart.fxml"));
-//            Stage stage = (Stage) btncart.getScene().getWindow();
-//            stage.setScene(new Scene(dashboardPage));
-//            stage.show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-	
-	@FXML
+    @FXML
     public void initialize() {
         System.out.println("Initializing DashboardController");
         
-        if (btnlogout == null) System.out.println("btnlogout is null");
-        if (btnexport == null) System.out.println("btnexport is null");
-        if (btncart == null) System.out.println("btncart is null");
-
-        // Use FXML-defined onAction methods instead of programmatic setting
-        // This assumes you've set up onAction="#methodName" in your FXML
-        btnlogout.setOnAction(event -> {
-            System.out.println("Logout button clicked!");
-            goToLogOut();
-        });
-        btnexport.setOnAction(event -> {
-            System.out.println("Export button clicked!");
-            goToExport();
-        });
-        btncart.setOnAction(event -> {
-            System.out.println("Cart button clicked!");
-            goToCart();
-        });
+        // Check if buttons are properly initialized
+        System.out.println("btnlogout: " + (btnlogout == null ? "null" : "initialized"));
+        System.out.println("btnexport: " + (btnexport == null ? "null" : "initialized"));
+        //System.out.println("btncart: " + (btncart == null ? "null" : "initialized"));
     }
 
-
-
-	 public void goToLogOut() {
-	        System.out.println("Attempting to go to Login page");
-	        try {
-	            Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
-	            Stage stage = (Stage) btnlogout.getScene().getWindow();
-	            stage.setScene(new Scene(loginPage));
-	            stage.show();
-	            System.out.println("Successfully switched to Login page");
-	        } catch (Exception e) {
-	            System.err.println("Failed to load Login page: " + e.getMessage());
-	            e.printStackTrace();
-	        }
-	    }
-
-    public void goToExport() {
-        // Similar implementation as goToLogOut, with appropriate logging
-    	System.out.println("Attempting to go to export page");
+    public void goToLogOut() {
+        System.out.println("Logout button clicked!");
         try {
-            Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Export.fxml"));
+            Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
             Stage stage = (Stage) btnlogout.getScene().getWindow();
             stage.setScene(new Scene(loginPage));
             stage.show();
-            System.out.println("Successfully switched to export page");
+        } catch (Exception e) {
+            System.err.println("Failed to load Login page: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void goToExport() {
+        System.out.println("Export button clicked!");
+        try {
+            Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/Export.fxml"));
+            Stage stage = (Stage) btnexport.getScene().getWindow();
+            stage.setScene(new Scene(exportPage));
+            stage.show();
         } catch (Exception e) {
             System.err.println("Failed to load export page: " + e.getMessage());
             e.printStackTrace();
@@ -117,19 +59,28 @@ public class DashboardController {
     }
 
     public void goToCart() {
-        // Similar implementation as goToLogOut, with appropriate logging
-    	System.out.println("Attempting to go to cart page");
+        System.out.println("Cart button clicked!");
         try {
-            Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Cart.fxml"));
-            Stage stage = (Stage) btnlogout.getScene().getWindow();
-            stage.setScene(new Scene(loginPage));
+            Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/Cart.fxml"));
+            Stage stage = (Stage) btncart.getScene().getWindow();
+            stage.setScene(new Scene(cartPage));
             stage.show();
-            System.out.println("Successfully switched to cart page");
+        } catch (Exception e) {
+            System.err.println("Failed to load cart page: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void goToCheckout() {
+        System.out.println("Cart button clicked!");
+        try {
+            Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/Checkout.fxml"));
+            Stage stage = (Stage) btncheck.getScene().getWindow();
+            stage.setScene(new Scene(cartPage));
+            stage.show();
         } catch (Exception e) {
             System.err.println("Failed to load cart page: " + e.getMessage());
             e.printStackTrace();
         }
     }
 }
-
-
