@@ -44,6 +44,17 @@ public class LoginController {
                 e.printStackTrace();
             }
         }
+        
+        if(userAuthentication(username, password)) {
+        	try {
+                Parent nextPage = FXMLLoader.load(getClass().getResource("/Views/Dashboard.fxml"));
+                Stage stage = (Stage) btnlogin.getScene().getWindow();
+                stage.setScene(new Scene(nextPage));
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
       
     }
     
@@ -61,5 +72,9 @@ public class LoginController {
 	private boolean adminAuthentication(String username, String password) {
 		return username.equals("admin") && password.equals("reading_admin");
 	}
-	
+
+	private boolean userAuthentication(String username, String password) {
+		return username.equals("user") && password.equals("reading");
+	}
 }
+
