@@ -52,7 +52,10 @@ public class LoginController {
         
         if(userAuthentication(username, password)) {
         	try {
-                Parent nextPage = FXMLLoader.load(getClass().getResource("/Views/DashboardView.fxml"));
+        		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/DashboardView.fxml"));
+                Parent nextPage = loader.load();
+                DashboardController controller = loader.getController();
+                controller.setUsername(username);
                 Stage stage = (Stage) btnlogin.getScene().getWindow();
                 stage.setScene(new Scene(nextPage));
                 stage.show();
