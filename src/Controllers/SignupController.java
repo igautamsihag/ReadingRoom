@@ -79,7 +79,7 @@ public class SignupController {
 	 
 	 private void loadDashboard() {
 	        try {
-	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Dashboard.fxml"));
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/DashboardView.fxml"));
 	            Parent dashboardRoot = loader.load();
 	            Scene dashboardScene = new Scene(dashboardRoot);
 

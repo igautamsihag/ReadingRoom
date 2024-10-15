@@ -48,7 +48,7 @@
                   <Font name="Arial Bold" size="20.0" />
                </font>
             </Text>
-            <TextField layoutX="35.0" layoutY="195.0" prefHeight="34.0" prefWidth="215.0" promptText="XXXX-XXXX-XXXX-XXXX" style="-fx-background-color: EEEEEE; -fx-border-color: #7B8FA1; -fx-border-width: 0 0 1 0;" />
+            <TextField fx:id="txtCreditCardNumber" layoutX="35.0" layoutY="195.0" prefHeight="34.0" prefWidth="215.0" promptText="XXXX-XXXX-XXXX-XXXX" style="-fx-background-color: EEEEEE; -fx-border-color: #7B8FA1; -fx-border-width: 0 0 1 0;" />
             <Label layoutX="34.0" layoutY="253.0" text="Card Holder Name">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
@@ -61,14 +61,14 @@
                </font>
             </Label>
             <TextField layoutX="36.0" layoutY="362.0" prefHeight="32.0" prefWidth="43.0" promptText="MM" style="-fx-background-color: EEEEEE; -fx-border-color: #7B8FA1; -fx-border-width: 0 0 1 0;" />
-            <TextField layoutX="97.0" layoutY="362.0" prefHeight="32.0" prefWidth="45.0" promptText="YYYY" style="-fx-background-color: EEEEEE; -fx-border-color: #7B8FA1; -fx-border-width: 0 0 1 0;" />
+            <TextField fx:id="txtDate" layoutX="97.0" layoutY="362.0" prefHeight="32.0" prefWidth="45.0" promptText="YYYY" style="-fx-background-color: EEEEEE; -fx-border-color: #7B8FA1; -fx-border-width: 0 0 1 0;" />
             <Label layoutX="36.0" layoutY="412.0" text="CVV">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
             </Label>
-            <TextField layoutX="36.0" layoutY="438.0" prefHeight="34.0" prefWidth="44.0" promptText="XXX" style="-fx-background-color: EEEEEE; -fx-border-color: #7B8FA1; -fx-border-width: 0 0 1 0;" />
-            <Button layoutX="594.0" layoutY="462.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="68.0" style="-fx-background-color: black;" text="Confirm" textFill="WHITE">
+            <TextField fx:id="txtCVV" layoutX="36.0" layoutY="438.0" prefHeight="34.0" prefWidth="44.0" promptText="XXX" style="-fx-background-color: EEEEEE; -fx-border-color: #7B8FA1; -fx-border-width: 0 0 1 0;" />
+            <Button fx:id="btnconfirm" layoutX="594.0" layoutY="462.0" mnemonicParsing="false" onAction="#goToConfirm" prefHeight="32.0" prefWidth="68.0" style="-fx-background-color: black;" text="Confirm" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="13.0" />
                </font>

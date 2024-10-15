@@ -8,8 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.CartController">
    <bottom>
       <AnchorPane prefHeight="535.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
@@ -71,12 +70,12 @@
                   <Font name="Arial Bold" size="15.0" />
                </font>
             </Text>
-            <Button layoutX="603.0" layoutY="399.0" mnemonicParsing="false" style="-fx-background-color: black;" text="Check Out" textFill="WHITE">
+            <Button fx:id="btncheck" layoutX="603.0" layoutY="399.0" mnemonicParsing="false" onAction="#goToCheckout" style="-fx-background-color: black;" text="Check Out" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
             </Button>
-            <Button layoutX="603.0" layoutY="450.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="88.0" style="-fx-background-color: black;" text="Go Back" textFill="WHITE">
+            <Button fx:id="btndashboard" layoutX="603.0" layoutY="450.0" mnemonicParsing="false" onAction="#goToDashboard" prefHeight="26.0" prefWidth="88.0" style="-fx-background-color: black;" text="Go Back" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -92,7 +91,7 @@
                   <Font name="Arial Bold" size="25.0" />
                </font>
             </Text>
-            <Button layoutX="681.0" layoutY="22.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="82.0" style="-fx-background-color: black;" text="Log Out" textFill="WHITE">
+            <Button fx:id="btnlogout" layoutX="681.0" layoutY="22.0" mnemonicParsing="false" onAction="#goToLogOut" prefHeight="31.0" prefWidth="82.0" style="-fx-background-color: black;" text="Log Out" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="13.0" />
                </font>

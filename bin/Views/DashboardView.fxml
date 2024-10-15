@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <!-- Added this import -->
 <!-- Added this import -->
@@ -13,7 +16,7 @@
    <right>
       <AnchorPane prefHeight="600.0" prefWidth="606.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="welcomeLabel" layoutX="83.0" layoutY="22.0" text="Welcome!">
+            <Label fx:id="welcomeLabel" layoutX="235.0" layoutY="33.0" text="Welcome!">
                <font>
                   <Font name="Arial Bold" size="21.0" />
                </font></Label>
@@ -21,4 +24,51 @@
          </children>
       </AnchorPane>
    </right>
+   <left>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: FFCb8f;" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btnlogout" layoutX="61.0" layoutY="542.0" mnemonicParsing="false" onAction="#goToLogOut" prefHeight="35.0" prefWidth="78.0" style="-fx-background-color: black;" text="Log out" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnexport" layoutX="60.0" layoutY="330.0" mnemonicParsing="false" onAction="#goToExport" prefHeight="34.0" prefWidth="82.0" style="-fx-background-color: black;" text="Export" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="btncheck" layoutX="60.0" layoutY="264.0" mnemonicParsing="false" onAction="#goToCheckout" prefHeight="35.0" prefWidth="82.0" style="-fx-background-color: black;" text="Checkout" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="btncart" layoutX="62.0" layoutY="201.0" mnemonicParsing="false" onAction="#goToCart" prefHeight="34.0" prefWidth="80.0" style="-fx-background-color: black;" text="Cart" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Button>
+            <TextField layoutX="25.0" layoutY="61.0" />
+            <Text layoutX="53.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Books">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+            </Text>
+            <Button fx:id="btnsearch" layoutX="65.0" layoutY="104.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="76.0" style="-fx-background-color: black;" text="Search" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Button>
+            <Text layoutX="21.0" layoutY="454.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The Reading ">
+               <font>
+                  <Font name="Arial Bold" size="17.0" />
+               </font>
+            </Text>
+            <Text layoutX="129.0" layoutY="454.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Room">
+               <font>
+                  <Font name="Arial Bold" size="15.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </left>
 </BorderPane>
