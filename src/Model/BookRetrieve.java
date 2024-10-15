@@ -34,4 +34,21 @@ public class BookRetrieve {
         }
         return books;
     }
+    
+    public boolean updateBookQuantity(Book book) {
+        String updateQuery = "UPDATE books SET quantity = ? WHERE title = ?";
+        
+        try (Connection connection = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+            
+            pstmt.setInt(1, book.getQuantity());
+            pstmt.setString(2, book.getTitle());
+            
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 }
