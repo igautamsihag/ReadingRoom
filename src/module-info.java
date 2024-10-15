@@ -10,4 +10,5 @@ module ReadRoomDesktop {
 	opens application to javafx.graphics, javafx.fxml;
 	opens Controllers to javafx.fxml;
 	opens Views to javafx.fxml;
+	opens Model to javafx.base;
 }
