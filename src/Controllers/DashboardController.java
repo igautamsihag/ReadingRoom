@@ -31,6 +31,9 @@ public class DashboardController {
     private Button btncheck;
     
     @FXML
+    private Button btnedit;
+    
+    @FXML
     private Label welcomeLabel;
     
     @FXML
@@ -118,6 +121,19 @@ public class DashboardController {
         try {
             Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/Checkout.fxml"));
             Stage stage = (Stage) btncheck.getScene().getWindow();
+            stage.setScene(new Scene(cartPage));
+            stage.show();
+        } catch (Exception e) {
+            System.err.println("Failed to load cart page: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void goToEdit() {
+        System.out.println("Cart button clicked!");
+        try {
+            Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/EditProfile.fxml"));
+            Stage stage = (Stage) btnedit.getScene().getWindow();
             stage.setScene(new Scene(cartPage));
             stage.show();
         } catch (Exception e) {

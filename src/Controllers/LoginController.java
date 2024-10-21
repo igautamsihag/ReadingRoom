@@ -5,6 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import Model.CurrentSession;
+import Model.User;
+//import Model.CurrentSession;
+//import Model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -38,6 +42,7 @@ public class LoginController {
     public void loginManager() {
         String username = usernamelogin.getText();
         String password = passwordlogin.getText();
+        User currentUser = userAuthentication(username, password);
 
         if(adminAuthentication(username, password)) {
         	try {
@@ -50,21 +55,27 @@ public class LoginController {
             }
         }
         
-        if(userAuthentication(username, password)) {
-        	try {
-        		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/DashboardView.fxml"));
+        if (currentUser != null) {
+            // Set the current user in UserSession
+            CurrentSession.getInstance().setCurrentUser(currentUser);
+
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/DashboardView.fxml"));
                 Parent nextPage = loader.load();
                 DashboardController controller = loader.getController();
-                controller.setUsername(username);
+                controller.setUsername(currentUser.getUsername()); // Set username if needed
                 Stage stage = (Stage) btnlogin.getScene().getWindow();
                 stage.setScene(new Scene(nextPage));
                 stage.show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            System.out.println("Authentication failed.");
+            // Optionally show an error message to the user
         }
-      
     }
+      
     
 	public void goToSignUp() {
         try {
@@ -81,7 +92,7 @@ public class LoginController {
 		return username.equals("admin") && password.equals("reading_admin");
 	}
 
-	private boolean userAuthentication(String username, String password) {
+	private User userAuthentication(String username, String password) {
         String url = "jdbc:sqlite:readingroom.db"; // Update if needed
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
 
@@ -91,11 +102,16 @@ public class LoginController {
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
 
-            return rs.next(); // Returns true if a record was found
+            if (rs.next()) {
+                // Retrieve user details from the ResultSet
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                return new User(username, password, firstName, lastName); // Create User object
+            } // Returns true if a record was found
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false; // Return false if there's an error
+        return null; // Return false if there's an error
     }
 }
 

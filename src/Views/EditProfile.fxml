@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.EditProfileController">
+   <top>
+      <AnchorPane prefHeight="99.0" prefWidth="800.0" style="-fx-background-color: FFCFB3;" BorderPane.alignment="CENTER">
+         <children>
+            <Text layoutX="341.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Profile !">
+               <font>
+                  <Font name="Arial Bold" size="20.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </top>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="firstnameinput" layoutX="164.0" layoutY="63.0" />
+            <Text layoutX="33.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Change First Name">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Text>
+            <Text layoutX="33.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Change Last Name">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Text>
+            <Text layoutX="32.0" layoutY="185.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Change Password">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Text>
+            <TextField fx:id="lastnameinput" layoutX="165.0" layoutY="114.0" />
+            <TextField fx:id="passwordinput" layoutX="166.0" layoutY="168.0" />
+            <Button fx:id="btnFirstname" layoutX="368.0" layoutY="63.0" mnemonicParsing="false" onAction="#updateFirstname" style="-fx-background-color: black;" text="Confirm" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font></Button>
+            <Button fx:id="btnlastname" layoutX="368.0" layoutY="114.0" mnemonicParsing="false" onAction="#updateLastname" style="-fx-background-color: black;" text="Confirm" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font></Button>
+            <Button fx:id="btnpassword" layoutX="368.0" layoutY="168.0" mnemonicParsing="false" onAction="#updatePassword" style="-fx-background-color: black;" text="Confirm" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font></Button>
+            <Button fx:id="btndashboard" layoutX="34.0" layoutY="425.0" mnemonicParsing="false" onAction="#goToDashboard" prefHeight="34.0" prefWidth="82.0" style="-fx-background-color: black;" text="Go Back" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnlogout" layoutX="677.0" layoutY="425.0" mnemonicParsing="false" onAction="#goToLogOut" prefHeight="34.0" prefWidth="89.0" style="-fx-background-color: black;" text="Log Out" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

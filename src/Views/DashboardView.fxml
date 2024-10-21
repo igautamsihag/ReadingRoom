@@ -68,6 +68,11 @@
                   <Font name="Arial Bold" size="15.0" />
                </font>
             </Text>
+            <Button fx:id="btnedit" layoutX="64.0" layoutY="153.0" mnemonicParsing="false" onAction="#goToEdit" prefHeight="34.0" prefWidth="82.0" style="-fx-background-color: black;" text="Edit Profile" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="12.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </left>

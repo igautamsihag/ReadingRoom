@@ -6,17 +6,24 @@ import Model.BookRetrieve;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.util.List;
 
 public class AdminDashboardController {
 
+	@FXML
+	private Button btnlogout;
     @FXML
     private TableView<Book> booksTable;
     @FXML
@@ -85,5 +92,18 @@ public class AdminDashboardController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+    
+    public void goToLogOut() {
+        System.out.println("Logout button clicked!");
+        try {
+            Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
+            Stage stage = (Stage) btnlogout.getScene().getWindow();
+            stage.setScene(new Scene(loginPage));
+            stage.show();
+        } catch (Exception e) {
+            System.err.println("Failed to load Login page: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
