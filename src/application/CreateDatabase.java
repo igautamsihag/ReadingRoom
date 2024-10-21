@@ -98,7 +98,7 @@ public class CreateDatabase {
             stmt.execute(ordersTable);
             stmt.execute(orderDetailsTable);
 
-            System.out.println("Tables created successfully.");
+            System.out.println("Created tables in the database, Success!!.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

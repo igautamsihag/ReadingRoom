@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
@@ -12,64 +10,6 @@
    <bottom>
       <AnchorPane prefHeight="535.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="76.0" fitWidth="77.0" layoutX="43.0" layoutY="86.0" pickOnBounds="true">
-               <image>
-                  <Image url="@../../../../OneDrive/Pictures/Screenshot%202024-09-28%20183520.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="79.0" fitWidth="74.0" layoutX="45.0" layoutY="222.0" pickOnBounds="true">
-               <image>
-                  <Image url="@../../../../OneDrive/Pictures/Screenshot%202024-09-28%20183332.png" />
-               </image>
-            </ImageView>
-            <Text layoutX="68.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Item">
-               <font>
-                  <Font name="Arial Bold" size="13.0" />
-               </font>
-            </Text>
-            <Text layoutX="358.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price">
-               <font>
-                  <Font name="Arial Bold" size="13.0" />
-               </font>
-            </Text>
-            <Text layoutX="507.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quantity">
-               <font>
-                  <Font name="Arial Bold" size="13.0" />
-               </font>
-            </Text>
-            <Text layoutX="679.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total">
-               <font>
-                  <Font name="Arial Bold" size="13.0" />
-               </font>
-            </Text>
-            <Text layoutX="163.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Python Basics">
-               <font>
-                  <Font name="Arial Bold" size="15.0" />
-               </font>
-            </Text>
-            <Text layoutX="163.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="David Amos" />
-            <Text layoutX="364.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$49" />
-            <Text layoutX="530.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2" />
-            <Text layoutX="685.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$99" />
-            <Text layoutX="158.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Clean Code">
-               <font>
-                  <Font name="Arial Bold" size="15.0" />
-               </font>
-            </Text>
-            <Text layoutX="162.0" layoutY="276.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Robert Martin" />
-            <Text layoutX="364.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$45" />
-            <Text layoutX="526.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1" />
-            <Text layoutX="685.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$45" />
-            <Text layoutX="603.0" layoutY="370.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total :">
-               <font>
-                  <Font name="Arial Bold" size="16.0" />
-               </font>
-            </Text>
-            <Text layoutX="667.0" layoutY="370.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\$144.00">
-               <font>
-                  <Font name="Arial Bold" size="15.0" />
-               </font>
-            </Text>
             <Button fx:id="btncheck" layoutX="603.0" layoutY="399.0" mnemonicParsing="false" onAction="#goToCheckout" style="-fx-background-color: black;" text="Check Out" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />

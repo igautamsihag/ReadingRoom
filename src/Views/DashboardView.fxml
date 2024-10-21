@@ -20,7 +20,7 @@
                <font>
                   <Font name="Arial Bold" size="21.0" />
                </font></Label>
-            <ListView fx:id="popularBooksList" layoutX="57.0" layoutY="92.0" prefHeight="400.0" prefWidth="486.0" />
+            <ListView fx:id="popularBooksList" layoutX="57.0" layoutY="92.0" prefHeight="442.0" prefWidth="486.0" />
          </children>
       </AnchorPane>
    </right>
@@ -32,7 +32,7 @@
                   <Font name="Arial Bold" size="13.0" />
                </font>
             </Button>
-            <Button fx:id="btnexport" layoutX="60.0" layoutY="330.0" mnemonicParsing="false" onAction="#goToExport" prefHeight="34.0" prefWidth="82.0" style="-fx-background-color: black;" text="Export" textFill="WHITE">
+            <Button fx:id="btnexport" layoutX="62.0" layoutY="314.0" mnemonicParsing="false" onAction="#goToExport" prefHeight="34.0" prefWidth="82.0" style="-fx-background-color: black;" text="Export" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="13.0" />
                </font>
@@ -47,13 +47,13 @@
                   <Font name="Arial Bold" size="13.0" />
                </font>
             </Button>
-            <TextField layoutX="25.0" layoutY="61.0" />
+            <TextField fx:id="inputsearch" layoutX="25.0" layoutY="61.0" />
             <Text layoutX="53.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search Books">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
             </Text>
-            <Button fx:id="btnsearch" layoutX="65.0" layoutY="104.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="76.0" style="-fx-background-color: black;" text="Search" textFill="WHITE">
+            <Button fx:id="btnsearch" layoutX="65.0" layoutY="104.0" mnemonicParsing="false" onAction="#searchBooks" prefHeight="34.0" prefWidth="76.0" style="-fx-background-color: black;" text="Search" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="13.0" />
                </font>
@@ -69,6 +69,11 @@
                </font>
             </Text>
             <Button fx:id="btnedit" layoutX="64.0" layoutY="153.0" mnemonicParsing="false" onAction="#goToEdit" prefHeight="34.0" prefWidth="82.0" style="-fx-background-color: black;" text="Edit Profile" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnlist" layoutX="42.0" layoutY="370.0" mnemonicParsing="false" onAction="#listAllBooks" prefHeight="34.0" prefWidth="118.0" style="-fx-background-color: black;" text="List all Books" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="12.0" />
                </font>

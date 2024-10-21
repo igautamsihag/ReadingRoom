@@ -7,10 +7,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -34,10 +36,19 @@ public class DashboardController {
     private Button btnedit;
     
     @FXML
+    private Button btnsearch;
+    
+    @FXML
     private Label welcomeLabel;
     
     @FXML
+    private TextField inputsearch;
+    
+    @FXML
     private ListView<String> popularBooksList;
+    
+    @FXML
+    private Button btnlist;
     
     @FXML
     public void initialize() {
@@ -77,6 +88,58 @@ public class DashboardController {
         return books;
     }
     
+    @FXML
+    public void listAllBooks(ActionEvent event) {
+        List<String> books = new ArrayList<>();
+        String url = "jdbc:sqlite:readingroom.db"; // Update with your DB path
+
+        String sql = "SELECT title FROM books";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                books.add(rs.getString("title"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        popularBooksList.getItems().clear();
+        popularBooksList.getItems().addAll(books);
+    }
+    @FXML
+    public void searchBooks(ActionEvent event) {
+        String query = inputsearch.getText();
+        if (!query.isEmpty()) {
+            List<String> searchResults = searchBooksInDatabase(query);
+            popularBooksList.getItems().clear(); // Clear previous results
+            popularBooksList.getItems().addAll(searchResults);
+        }
+    } 
+    
+    private List<String> searchBooksInDatabase(String query) {
+        List<String> books = new ArrayList<>();
+        String url = "jdbc:sqlite:readingroom.db"; // Update with your DB path
+
+        String sql = "SELECT title FROM books WHERE title LIKE ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        	
+            pstmt.setString(1, "%" + query + "%");
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                books.add(rs.getString("title"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return books;
+    }
     public void goToLogOut() {
         System.out.println("Logout button clicked!");
         try {

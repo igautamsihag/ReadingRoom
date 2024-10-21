@@ -17,11 +17,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
-
 import java.util.List;
 
 public class AdminDashboardController {
 
+	// Initializing UI components into the fields
 	@FXML
 	private Button btnlogout;
     @FXML

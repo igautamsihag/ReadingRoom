@@ -128,7 +128,7 @@ public class CheckoutController {
 		errorFlow.getChildren().add(errorText);
 	}
 
-	private boolean isValidCreditCard(String creditCardNumber) {
+	public boolean isValidCreditCard(String creditCardNumber) {
 		return creditCardNumber.length() == 16 && creditCardNumber.matches("\\d+");
 	}
 
