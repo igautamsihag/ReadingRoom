@@ -29,12 +29,17 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
+            <Label fx:id="totalPriceLabel" layoutX="227.0" layoutY="86.0" text="Label">
+               <font>
+                  <Font name="Arial Bold" size="15.0" />
+               </font>
+            </Label>
             <Text layoutX="35.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Thank you for shopping with us !">
                <font>
                   <Font name="Arial Bold" size="15.0" />
                </font>
             </Text>
-            <Text layoutX="35.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Price of your order is $144 ">
+            <Text layoutX="35.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Price of your order is ">
                <font>
                   <Font name="Arial Bold" size="15.0" />
                </font>

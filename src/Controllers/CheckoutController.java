@@ -5,8 +5,10 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import Model.ShoppingCart;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -44,6 +46,21 @@ public class CheckoutController {
 
 	@FXML
 	private TextFlow errdate;
+	
+	@FXML
+    private Label totalPriceLabel; // Add this label in your FXML
+
+    private ShoppingCart shoppingCart;
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+        updateTotalPrice();
+    }
+
+    private void updateTotalPrice() {
+        double totalPrice = shoppingCart.getTotalPrice();
+        totalPriceLabel.setText("$" + totalPrice);
+    }
 
 	@FXML
 	public void initialize() {

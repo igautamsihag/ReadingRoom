@@ -1,38 +1,32 @@
 package Model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShoppingCart {
-    private Map<Book, Integer> cartItems = new HashMap<>();
+    private List<CartItem> items;
 
-    public String addBook(Book book, int quantity) {
-        if (quantity > book.getQuantity()) {
-            return "Not enough stock available!";
-        }
-        cartItems.put(book, cartItems.getOrDefault(book, 0) + quantity);
-        return "Book added to cart.";
+    public ShoppingCart() {
+        this.items = new ArrayList<>();
     }
 
-    public void updateBookQuantity(Book book, int newQuantity) {
-        if (newQuantity > book.getQuantity()) {
-            throw new IllegalArgumentException("Not enough stock available!");
-        }
-        cartItems.put(book, newQuantity);
+    public void addItem(CartItem item) {
+        items.add(item);
+    }
+    
+    public void removeItem(CartItem item) {
+        items.remove(item);
     }
 
-    public void removeBook(Book book) {
-        cartItems.remove(book);
-    }
-
-    public Map<Book, Integer> getCartItems() {
-        return cartItems;
+    public List<CartItem> getItems() {
+        return items;
     }
 
     public double getTotalPrice() {
-        return cartItems.entrySet().stream()
-            .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
-            .sum();
+        return items.stream().mapToDouble(CartItem::getTotalPrice).sum();
+    }
+
+    public void clear() {
+        items.clear();
     }
 }
-
