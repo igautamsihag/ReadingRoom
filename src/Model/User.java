@@ -13,6 +13,7 @@ public class User {
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.id = 0;
 	}
 	
 	public void setID(int id) {

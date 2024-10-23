@@ -1,11 +1,19 @@
 package Controllers;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 // importing all the necessary required libraries
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import Model.CartItem;
+import Model.CurrentSession;
 import Model.ShoppingCart;
+import Model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -120,6 +128,7 @@ public class CheckoutController {
 		}
 
 		if (isValid) {
+			createOrder();
 			try {
 
 				Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/CheckoutConfirm.fxml"));
@@ -132,6 +141,87 @@ public class CheckoutController {
 			}
 		}
 	}
+	
+	private void createOrder() {
+        String url = "jdbc:sqlite:readingroom.db"; // Your database URL
+        String insertOrderSQL = "INSERT INTO orders (user_id, order_date, total_price) VALUES (?, ?, ?)";
+        String insertOrderDetailsSQL = "INSERT INTO order_details (order_id, book_id, quantity, price) VALUES (?, ?, ?, ?)";
+
+        Connection conn = null;
+        try {
+            // Start a transaction
+        	conn = DriverManager.getConnection(url);
+            conn.setAutoCommit(false);
+
+            // Insert the order
+            PreparedStatement orderStmt = conn.prepareStatement(insertOrderSQL, PreparedStatement.RETURN_GENERATED_KEYS);
+            // Assuming you have a method to get the current user ID
+            orderStmt.setInt(1, getCurrentUserId()); // Get current user ID
+            orderStmt.setString(2, getCurrentDate()); // Current date
+            orderStmt.setDouble(3, shoppingCart.getTotalPrice());
+            orderStmt.executeUpdate();
+
+            // Get the generated order ID
+            ResultSet generatedKeys = orderStmt.getGeneratedKeys();
+            int orderId = -1;
+            if (generatedKeys.next()) {
+                orderId = generatedKeys.getInt(1);
+            }
+
+            // Insert order details
+            for (CartItem item : shoppingCart.getItems()) {
+                PreparedStatement detailStmt = conn.prepareStatement(insertOrderDetailsSQL);
+                detailStmt.setInt(1, orderId);
+                detailStmt.setInt(2, getBookId(item.getTitle())); // You need to implement this method
+                detailStmt.setInt(3, item.getQuantity());
+                detailStmt.setDouble(4, item.getPrice());
+                detailStmt.executeUpdate();
+            }
+
+            // Commit the transaction
+            conn.commit();
+            System.out.println("Order created successfully!");
+        } catch (SQLException e) {
+            System.err.println("Failed to create order: " + e.getMessage());
+            // Rollback in case of error
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Failed to rollback transaction: " + rollbackEx.getMessage());
+            }
+        }
+    }
+
+    private int getCurrentUserId() {
+    	User currentUser = CurrentSession.getInstance().getCurrentUser();
+        return currentUser != null ? currentUser.getID() : -1;
+    }
+
+    private String getCurrentDate() {
+        // Logic to get the current date as a string
+        return java.time.LocalDate.now().toString();
+    }
+
+    private int getBookId(String title) {
+    	String url = "jdbc:sqlite:readingroom.db"; // Your database URL
+        String query = "SELECT book_id FROM books WHERE title = ?"; // Update this with your actual table name
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, title);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("book_id"); // Return the book ID
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching book ID: " + e.getMessage());
+        }
+
+        return -1;
+    }
 
 	private void clearErrorMessages() {
 		errcreditcard.getChildren().clear();

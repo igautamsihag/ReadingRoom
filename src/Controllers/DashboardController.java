@@ -60,6 +60,12 @@ public class DashboardController {
 
 	@FXML
 	private Button btnlist;
+	
+	@FXML
+	private Button btnview;
+	
+	@FXML
+	private Button btndetails;
 
 	@FXML
 	public void initialize() {
@@ -223,6 +229,20 @@ public class DashboardController {
 			e.printStackTrace();
 		}
 	}
+	
+	public void goToOrders() {
+	    System.out.println("Viewing all orders.");
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ViewOrder.fxml"));
+	        Parent orderDetailsPage = loader.load();
+	        Stage stage = (Stage) btnview.getScene().getWindow();
+	        stage.setScene(new Scene(orderDetailsPage));
+	        stage.show();
+	    } catch (Exception e) {
+	        System.err.println("Failed to load order details page: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+	}
 
 	public void goToCart() {
 		System.out.println("Cart button clicked!");
@@ -263,6 +283,19 @@ public class DashboardController {
 		try {
 			Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/EditProfile.fxml"));
 			Stage stage = (Stage) btnedit.getScene().getWindow();
+			stage.setScene(new Scene(cartPage));
+			stage.show();
+		} catch (Exception e) {
+			System.err.println("Failed to load cart page: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public void goToOrderDetails() {
+		System.out.println("Cart button clicked!");
+		try {
+			Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/OrderView.fxml"));
+			Stage stage = (Stage) btndetails.getScene().getWindow();
 			stage.setScene(new Scene(cartPage));
 			stage.show();
 		} catch (Exception e) {

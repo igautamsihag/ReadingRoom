@@ -63,7 +63,7 @@ public class LoginController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/DashboardView.fxml"));
                 Parent nextPage = loader.load();
                 DashboardController controller = loader.getController();
-                controller.setUsername(currentUser.getUsername()); // Set username if needed
+                controller.setUsername(currentUser.getUsername());// Set username if needed
                 Stage stage = (Stage) btnlogin.getScene().getWindow();
                 stage.setScene(new Scene(nextPage));
                 stage.show();
@@ -106,7 +106,11 @@ public class LoginController {
                 // Retrieve user details from the ResultSet
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
-                return new User(username, password, firstName, lastName); // Create User object
+                int id = rs.getInt("id");
+                User user = new User(username, password, firstName, lastName);
+                user.setID(id); // Set the ID after creating the user
+                return user;
+             // Create User object
             } // Returns true if a record was found
         } catch (Exception e) {
             e.printStackTrace();
