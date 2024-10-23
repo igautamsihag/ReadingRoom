@@ -87,6 +87,7 @@
             <TextFlow fx:id="errcreditcard" layoutX="315.0" layoutY="195.0" prefHeight="34.0" prefWidth="218.0" />
             <TextFlow fx:id="errdate" layoutX="328.0" layoutY="361.0" prefHeight="34.0" prefWidth="218.0" />
             <TextFlow fx:id="errcvv" layoutX="200.0" layoutY="434.0" prefHeight="42.0" prefWidth="134.0" />
+            <TextFlow fx:id="errStock" layoutX="315.0" layoutY="150.0" prefHeight="34.0" prefWidth="218.0" visible="false"/>
          </children>
       </AnchorPane>
    </center>

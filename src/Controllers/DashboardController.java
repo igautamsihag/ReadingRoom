@@ -35,9 +35,6 @@ public class DashboardController {
 	private Button btnlogout;
 
 	@FXML
-	private Button btnexport;
-
-	@FXML
 	private Button btncart;
 
 	@FXML
@@ -62,10 +59,10 @@ public class DashboardController {
 	private Button btnlist;
 	
 	@FXML
-	private Button btnview;
+	private Button btndetails;
 	
 	@FXML
-	private Button btndetails;
+	private Label messageLabel;
 
 	@FXML
 	public void initialize() {
@@ -73,7 +70,7 @@ public class DashboardController {
 
 		// Check if buttons are properly initialized
 		System.out.println("btnlogout: " + (btnlogout == null ? "null" : "initialized"));
-		System.out.println("btnexport: " + (btnexport == null ? "null" : "initialized"));
+		//System.out.println("btnexport: " + (btnexport == null ? "null" : "initialized"));
 		// System.out.println("btncart: " + (btncart == null ? "null" : "initialized"));
 
 		// Load the top 5 popular books
@@ -83,7 +80,8 @@ public class DashboardController {
 	}
 
 	private void populateBooks(List<String> books) {
-		popularBooksList.getChildren().clear(); // Clear previous entries
+		popularBooksList.getChildren().clear();
+		messageLabel.setText("");// Clear previous entries
 		for (String title : books) {
 			// Create a horizontal layout for each book
 			HBox bookItem = new HBox(10); // spacing of 10
@@ -91,18 +89,46 @@ public class DashboardController {
 			TextField quantityField = new TextField(); // Default quantity
 			Button buyButton = new Button("Buy");
 
+			int availableQuantity = getAvailableQuantity(title);
 			buyButton.setOnAction(event -> {
 				String quantityText = quantityField.getText();
 				// Add your buy logic here
 				int bookquantity = Integer.parseInt(quantityText.isEmpty() ? "0" : quantityText);
+				if (bookquantity > availableQuantity) {
+					messageLabel.setText("Only " + availableQuantity + " copies of " + title + " are available.");
+	                System.out.println("Only " + availableQuantity + " copies of " + title + " are available.");
+	                // Display an error message to the user
+	                // You might want to use a Label or Dialog for this purpose
+	                return; // Stop further execution
+	            }
                 double price = getBookPrice(title); // Assume a method to get price
-                shoppingCart.addItem(new CartItem(title, bookquantity, price));
+                shoppingCart.addItem(new CartItem(title, bookquantity, price, availableQuantity));
 				System.out.println("Buying " + quantityText + " copies of " + title);
 			});
 
 			bookItem.getChildren().addAll(bookLabel, quantityField, buyButton);
 			popularBooksList.getChildren().add(bookItem);
 		}
+	}
+	
+	private int getAvailableQuantity(String title) {
+	    String url = "jdbc:sqlite:readingroom.db"; // Update with your DB path
+	    String sql = "SELECT quantity FROM books WHERE title = ?"; // Adjust this query based on your database schema
+
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        pstmt.setString(1, title);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getInt("quantity"); // Ensure this matches your column name for available quantity
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return 0; // Default if not found
 	}
 	
 	private double getBookPrice(String title) {
@@ -217,32 +243,32 @@ public class DashboardController {
 		}
 	}
 
-	public void goToExport() {
-		System.out.println("Export button clicked!");
-		try {
-			Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/Export.fxml"));
-			Stage stage = (Stage) btnexport.getScene().getWindow();
-			stage.setScene(new Scene(exportPage));
-			stage.show();
-		} catch (Exception e) {
-			System.err.println("Failed to load export page: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
+//	public void goToExport() {
+//		System.out.println("Export button clicked!");
+//		try {
+//			Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/Export.fxml"));
+//			Stage stage = (Stage) btnexport.getScene().getWindow();
+//			stage.setScene(new Scene(exportPage));
+//			stage.show();
+//		} catch (Exception e) {
+//			System.err.println("Failed to load export page: " + e.getMessage());
+//			e.printStackTrace();
+//		}
+//	}
 	
-	public void goToOrders() {
-	    System.out.println("Viewing all orders.");
-	    try {
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ViewOrder.fxml"));
-	        Parent orderDetailsPage = loader.load();
-	        Stage stage = (Stage) btnview.getScene().getWindow();
-	        stage.setScene(new Scene(orderDetailsPage));
-	        stage.show();
-	    } catch (Exception e) {
-	        System.err.println("Failed to load order details page: " + e.getMessage());
-	        e.printStackTrace();
-	    }
-	}
+//	public void goToOrders() {
+//	    System.out.println("Viewing all orders.");
+//	    try {
+//	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ViewOrder.fxml"));
+//	        Parent orderDetailsPage = loader.load();
+//	        Stage stage = (Stage) btnview.getScene().getWindow();
+//	        stage.setScene(new Scene(orderDetailsPage));
+//	        stage.show();
+//	    } catch (Exception e) {
+//	        System.err.println("Failed to load order details page: " + e.getMessage());
+//	        e.printStackTrace();
+//	    }
+//	}
 
 	public void goToCart() {
 		System.out.println("Cart button clicked!");

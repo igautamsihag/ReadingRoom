@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-// importing all the necessary required libraries
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -28,35 +27,38 @@ import javafx.fxml.FXMLLoader;
 
 public class CheckoutController {
 
-	@FXML
-	private Button btnlogout;
+    @FXML
+    private Button btnlogout;
 
-	@FXML
-	private Button btndashboard;
+    @FXML
+    private Button btndashboard;
 
-	@FXML
-	private Button btnconfirm;
+    @FXML
+    private Button btnconfirm;
 
-	@FXML
-	private TextField txtCreditCardNumber;
+    @FXML
+    private TextField txtCreditCardNumber;
 
-	@FXML
-	private TextField txtCVV;
+    @FXML
+    private TextField txtCVV;
 
-	@FXML
-	private TextField txtDate;
+    @FXML
+    private TextField txtDate; // Assuming this is formatted as MM/YYYY
 
-	@FXML
-	private TextFlow errcreditcard;
+    @FXML
+    private TextFlow errcreditcard;
 
-	@FXML
-	private TextFlow errcvv;
+    @FXML
+    private TextFlow errcvv;
 
-	@FXML
-	private TextFlow errdate;
-	
-	@FXML
-    private Label totalPriceLabel; // Add this label in your FXML
+    @FXML
+    private TextFlow errdate;
+
+    @FXML
+    private TextFlow errStock; // New TextFlow for stock errors
+
+    @FXML
+    private Label totalPriceLabel;
 
     private ShoppingCart shoppingCart;
 
@@ -70,120 +72,130 @@ public class CheckoutController {
         totalPriceLabel.setText("$" + totalPrice);
     }
 
-	@FXML
-	public void initialize() {
-		System.out.println("Initializing DashboardController");
+    @FXML
+    public void initialize() {
+        System.out.println("Initializing CheckoutController");
+    }
 
-		// Check if buttons are properly initialized
-		System.out.println("btnlogout: " + (btnlogout == null ? "null" : "initialized"));
-		System.out.println("btnexport: " + (btndashboard == null ? "null" : "initialized"));
-		// System.out.println("btncart: " + (btncart == null ? "null" : "initialized"));
-	}
+    public void goToLogOut() {
+        try {
+            Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
+            Stage stage = (Stage) btnlogout.getScene().getWindow();
+            stage.setScene(new Scene(loginPage));
+            stage.show();
+        } catch (Exception e) {
+            System.err.println("Failed to load Login page: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-	public void goToLogOut() {
-		System.out.println("Logout button clicked!");
-		try {
-			Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
-			Stage stage = (Stage) btnlogout.getScene().getWindow();
-			stage.setScene(new Scene(loginPage));
-			stage.show();
-		} catch (Exception e) {
-			System.err.println("Failed to load Login page: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
+    public void goToDashboard() {
+        try {
+            Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/DashboardView.fxml"));
+            Stage stage = (Stage) btndashboard.getScene().getWindow();
+            stage.setScene(new Scene(exportPage));
+            stage.show();
+        } catch (Exception e) {
+            System.err.println("Failed to load dashboard page: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-	public void goToDashboard() {
-		System.out.println("Export button clicked!");
-		try {
-			Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/DashboardView.fxml"));
-			Stage stage = (Stage) btndashboard.getScene().getWindow();
-			stage.setScene(new Scene(exportPage));
-			stage.show();
-		} catch (Exception e) {
-			System.err.println("Failed to load export page: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
+    public void goToConfirm() {
+        System.out.println("Confirm button clicked!");
 
-	public void goToConfirm() {
-		System.out.println("Export button clicked!");
-		System.out.println("Date entered: " + txtDate.getText());
+        clearErrorMessages();
 
-		clearErrorMessages();
+        boolean canProceed = true; // Flag to determine if we can proceed
 
-		boolean isValid = true;
+        if (!isValidCreditCard(txtCreditCardNumber.getText())) {
+            showError(errcreditcard, "Invalid credit card number.");
+            canProceed = false;
+        }
 
-		if (!isValidCreditCard(txtCreditCardNumber.getText())) {
-			showError(errcreditcard, "Invalid credit card number.");
-			isValid = false;
-		}
-		if (!isValidCVV(txtCVV.getText())) {
-			showError(errcvv, "Invalid CVV.");
-			isValid = false;
-		}
-		if (!isValidExpiryDate(txtDate.getText().trim())) {
-			showError(errdate, "Invalid expiry date.");
-			isValid = false;
-		}
+        if (!isValidCVV(txtCVV.getText())) {
+            showError(errcvv, "Invalid CVV.");
+            canProceed = false;
+        }
 
-		if (isValid) {
-			createOrder();
-			try {
+        if (!isValidExpiryDate(txtDate.getText().trim())) {
+            showError(errdate, "Invalid expiry date.");
+            canProceed = false;
+        }
 
-				Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/CheckoutConfirm.fxml"));
-				Stage stage = (Stage) btnconfirm.getScene().getWindow();
-				stage.setScene(new Scene(exportPage));
-				stage.show();
-			} catch (Exception e) {
-				System.err.println("Failed to load export page: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private void createOrder() {
+        for (CartItem item : shoppingCart.getItems()) {
+            int availableQuantity = getAvailableQuantity(item.getTitle());
+
+            if (availableQuantity < item.getQuantity()) {
+                showError(errStock, item.getTitle() + " is out of stock. Only " + availableQuantity + " available.");
+                canProceed = false; // Set flag to false
+                continue; // Skip to the next item
+            }
+        }
+
+        // Proceed only if all validations are passed
+        if (canProceed) {
+            createOrder(); // Your order creation logic
+
+            // Navigate to confirmation page
+            try {
+                Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/CheckoutConfirm.fxml"));
+                Stage stage = (Stage) btnconfirm.getScene().getWindow();
+                stage.setScene(new Scene(exportPage));
+                stage.show();
+            } catch (Exception e) {
+                System.err.println("Failed to load confirmation page: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Cannot proceed to confirmation due to errors.");
+        }
+    }
+
+    private void createOrder() {
         String url = "jdbc:sqlite:readingroom.db"; // Your database URL
         String insertOrderSQL = "INSERT INTO orders (user_id, order_date, total_price) VALUES (?, ?, ?)";
         String insertOrderDetailsSQL = "INSERT INTO order_details (order_id, book_id, quantity, price) VALUES (?, ?, ?, ?)";
+        String updateBookQuantitySQL = "UPDATE books SET quantity = quantity - ? WHERE book_id = ?";
 
         Connection conn = null;
         try {
-            // Start a transaction
-        	conn = DriverManager.getConnection(url);
+            conn = DriverManager.getConnection(url);
             conn.setAutoCommit(false);
 
-            // Insert the order
             PreparedStatement orderStmt = conn.prepareStatement(insertOrderSQL, PreparedStatement.RETURN_GENERATED_KEYS);
-            // Assuming you have a method to get the current user ID
-            orderStmt.setInt(1, getCurrentUserId()); // Get current user ID
-            orderStmt.setString(2, getCurrentDate()); // Current date
+            orderStmt.setInt(1, getCurrentUserId());
+            orderStmt.setString(2, getCurrentDate());
             orderStmt.setDouble(3, shoppingCart.getTotalPrice());
             orderStmt.executeUpdate();
 
-            // Get the generated order ID
             ResultSet generatedKeys = orderStmt.getGeneratedKeys();
             int orderId = -1;
             if (generatedKeys.next()) {
                 orderId = generatedKeys.getInt(1);
             }
 
-            // Insert order details
             for (CartItem item : shoppingCart.getItems()) {
-                PreparedStatement detailStmt = conn.prepareStatement(insertOrderDetailsSQL);
-                detailStmt.setInt(1, orderId);
-                detailStmt.setInt(2, getBookId(item.getTitle())); // You need to implement this method
-                detailStmt.setInt(3, item.getQuantity());
-                detailStmt.setDouble(4, item.getPrice());
-                detailStmt.executeUpdate();
+                int availableQuantity = getAvailableQuantity(item.getTitle());
+                if (availableQuantity >= item.getQuantity()) {
+                    PreparedStatement detailStmt = conn.prepareStatement(insertOrderDetailsSQL);
+                    detailStmt.setInt(1, orderId);
+                    detailStmt.setInt(2, getBookId(item.getTitle()));
+                    detailStmt.setInt(3, item.getQuantity());
+                    detailStmt.setDouble(4, item.getPrice());
+                    detailStmt.executeUpdate();
+
+                    PreparedStatement updateStmt = conn.prepareStatement(updateBookQuantitySQL);
+                    updateStmt.setInt(1, item.getQuantity());
+                    updateStmt.setInt(2, getBookId(item.getTitle()));
+                    updateStmt.executeUpdate();
+                }
             }
 
-            // Commit the transaction
             conn.commit();
             System.out.println("Order created successfully!");
         } catch (SQLException e) {
             System.err.println("Failed to create order: " + e.getMessage());
-            // Rollback in case of error
             try {
                 if (conn != null) {
                     conn.rollback();
@@ -191,22 +203,29 @@ public class CheckoutController {
             } catch (SQLException rollbackEx) {
                 System.err.println("Failed to rollback transaction: " + rollbackEx.getMessage());
             }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Failed to close connection: " + e.getMessage());
+            }
         }
     }
 
     private int getCurrentUserId() {
-    	User currentUser = CurrentSession.getInstance().getCurrentUser();
+        User currentUser = CurrentSession.getInstance().getCurrentUser();
         return currentUser != null ? currentUser.getID() : -1;
     }
 
     private String getCurrentDate() {
-        // Logic to get the current date as a string
         return java.time.LocalDate.now().toString();
     }
 
-    private int getBookId(String title) {
-    	String url = "jdbc:sqlite:readingroom.db"; // Your database URL
-        String query = "SELECT book_id FROM books WHERE title = ?"; // Update this with your actual table name
+    private int getAvailableQuantity(String title) {
+        String url = "jdbc:sqlite:readingroom.db";
+        String query = "SELECT quantity FROM books WHERE title = ?";
 
         try (Connection conn = DriverManager.getConnection(url);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -214,7 +233,26 @@ public class CheckoutController {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt("book_id"); // Return the book ID
+                return rs.getInt("quantity");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching available quantity: " + e.getMessage());
+        }
+
+        return 0;
+    }
+
+    private int getBookId(String title) {
+        String url = "jdbc:sqlite:readingroom.db";
+        String query = "SELECT book_id FROM books WHERE title = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, title);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("book_id");
             }
         } catch (SQLException e) {
             System.err.println("Error fetching book ID: " + e.getMessage());
@@ -223,42 +261,37 @@ public class CheckoutController {
         return -1;
     }
 
-	private void clearErrorMessages() {
-		errcreditcard.getChildren().clear();
-		errcvv.getChildren().clear();
-		errdate.getChildren().clear();
-	}
+    private void clearErrorMessages() {
+        errcreditcard.getChildren().clear();
+        errcvv.getChildren().clear();
+        errdate.getChildren().clear();
+        errStock.getChildren().clear(); // Clear stock error messages
+    }
 
-	private void showError(TextFlow errorFlow, String message) {
-		Text errorText = new Text(message);
-		errorText.setFill(Color.RED);
-		errorFlow.getChildren().add(errorText);
-	}
+    private void showError(TextFlow errorFlow, String message) {
+        errorFlow.getChildren().clear();
+        Text errorText = new Text(message);
+        errorText.setFill(Color.RED);
+        errorFlow.getChildren().add(errorText);
+        errorFlow.setVisible(true); // Ensure the TextFlow is visible
+    }
 
-	public boolean isValidCreditCard(String creditCardNumber) {
-		return creditCardNumber.length() == 16 && creditCardNumber.matches("\\d+");
-	}
+    public boolean isValidCreditCard(String creditCardNumber) {
+        return creditCardNumber.length() == 16 && creditCardNumber.matches("\\d+");
+    }
 
-	private boolean isValidCVV(String cvv) {
-		return cvv.length() == 3 && cvv.matches("\\d+");
-	}
+    private boolean isValidCVV(String cvv) {
+        return cvv.length() == 3 && cvv.matches("\\d+");
+    }
 
-	private boolean isValidExpiryDate(String expiryDate) {
-		System.out.println("Validating date: " + expiryDate);
-		try {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
-			YearMonth expiryYearMonth = YearMonth.parse(expiryDate, formatter);
-			YearMonth currentYearMonth = YearMonth.now();
-
-			System.out.println("Parsed expiry year/month: " + expiryYearMonth);
-			System.out.println("Current year/month: " + currentYearMonth);
-			System.out.println("Is expiry after or equal to current: " + !expiryYearMonth.isBefore(currentYearMonth));
-
-			return !expiryYearMonth.isBefore(currentYearMonth);
-		} catch (DateTimeParseException e) {
-			System.out.println("Date parsing failed: " + e.getMessage());
-			return false;
-		}
-	}
-
+    private boolean isValidExpiryDate(String expiryDate) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+            YearMonth expiryYearMonth = YearMonth.parse(expiryDate, formatter);
+            YearMonth currentYearMonth = YearMonth.now();
+            return !expiryYearMonth.isBefore(currentYearMonth);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
 }
