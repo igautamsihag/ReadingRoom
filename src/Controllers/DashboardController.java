@@ -63,6 +63,8 @@ public class DashboardController {
 	
 	@FXML
 	private Label messageLabel;
+	
+	private int currentUserId;
 
 	@FXML
 	public void initialize() {
@@ -79,6 +81,88 @@ public class DashboardController {
 		populateBooks(popularBooks);
 	}
 
+	public void setCurrentUserId(int userId) {
+	    this.currentUserId = userId;
+	    loadUserCart(); // Load the cart when user ID is set
+	}
+	
+	private void loadUserCart() {
+	    String url = "jdbc:sqlite:readingroom.db";
+	    String sql = "SELECT book_id, quantity, price FROM cart_items WHERE user_id = ?";
+	    
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        
+	        pstmt.setInt(1, currentUserId);
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        while (rs.next()) {
+	        	int bookId = rs.getInt("book_id");
+	        	String title = getBookTitle(bookId);
+	            int quantity = rs.getInt("quantity");
+	            double price = rs.getDouble("price");
+	            int availableQuantity = getAvailableQuantity(title);
+	            
+	            // Add item to shopping cart
+	            shoppingCart.addItem(new CartItem(title, quantity, price, availableQuantity));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	private String getBookTitle(int bookId) {
+	    String url = "jdbc:sqlite:readingroom.db";
+	    String sql = "SELECT title FROM books WHERE book_id = ?";
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setInt(1, bookId);
+	        ResultSet rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            return rs.getString("title");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return null; // Or throw an exception if the book is not found
+	}
+
+
+	private void saveCartItem(CartItem item) {
+	    String url = "jdbc:sqlite:readingroom.db";
+	    String sql = "INSERT INTO cart_items (user_id, book_id, quantity, price) VALUES (?, ?, ?, ?)";
+	    
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        
+	        pstmt.setInt(1, currentUserId);
+	        pstmt.setInt(2, getBookId(item.getTitle()));
+	        pstmt.setInt(3, item.getQuantity());
+	        pstmt.setDouble(4, item.getPrice());
+	        
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	private int getBookId(String title) {
+	    String url = "jdbc:sqlite:readingroom.db";
+	    String sql = "SELECT book_id FROM books WHERE title = ?";
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setString(1, title);
+	        ResultSet rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            return rs.getInt("book_id");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return -1; // Or throw an exception if the book is not found
+	}
+
+	
 	private void populateBooks(List<String> books) {
 		popularBooksList.getChildren().clear();
 		messageLabel.setText("");// Clear previous entries
@@ -102,7 +186,9 @@ public class DashboardController {
 	                return; // Stop further execution
 	            }
                 double price = getBookPrice(title); // Assume a method to get price
-                shoppingCart.addItem(new CartItem(title, bookquantity, price, availableQuantity));
+                CartItem item = new CartItem(title, bookquantity, price, availableQuantity);
+                shoppingCart.addItem(item);
+                saveCartItem(item);
 				System.out.println("Buying " + quantityText + " copies of " + title);
 			});
 
@@ -151,9 +237,14 @@ public class DashboardController {
 	    return 0.0;
     }
 
-	public void setUsername(String username) {
-		welcomeLabel.setText("Welcome, " + username + "!");
+//	public void setUsername(String username) {
+//		welcomeLabel.setText("Welcome, " + username + "!");
+//	}
+	
+	public void setFirstName(String firstName) {
+	    welcomeLabel.setText("Welcome, " + firstName + "!");
 	}
+
 
 	private List<String> getTop5PopularBooks() {
 		List<String> books = new ArrayList<>();

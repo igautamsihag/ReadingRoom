@@ -44,6 +44,7 @@ public class CreateDatabase {
     	String dropBooksTable = "DROP TABLE IF EXISTS books;";
     	String dropOrdersTable = "DROP TABLE IF EXISTS orders;";
     	String dropOrderDetailsTable = "DROP TABLE IF EXISTS order_details;";
+    	String dropCartItemsTable = "DROP TABLE IF EXISTS cart_items;";
     	
     	// SQL statements to create users table
         String usersTable = "CREATE TABLE IF NOT EXISTS users (" +
@@ -83,6 +84,16 @@ public class CreateDatabase {
                 "FOREIGN KEY (order_id) REFERENCES orders (id)," +
                 "FOREIGN KEY (book_id) REFERENCES books (book_id)" +
                 ");";
+        
+        String cartItemsTable = "CREATE TABLE IF NOT EXISTS cart_items (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "user_id INTEGER NOT NULL," +
+                "book_id INTEGER NOT NULL," +
+                "quantity INTEGER NOT NULL," +
+                "price REAL NOT NULL," +
+                "FOREIGN KEY (user_id) REFERENCES users (id)," +
+                "FOREIGN KEY (book_id) REFERENCES books (book_id)" +
+                ");";
 
         // establishing a database connection
         try (Connection conn = DriverManager.getConnection(DATABASE_URL);
@@ -93,10 +104,12 @@ public class CreateDatabase {
         	stmt.execute(dropBooksTable);
         	stmt.execute(dropOrdersTable);
         	stmt.execute(dropOrderDetailsTable);
+        	stmt.execute(dropCartItemsTable);
             stmt.execute(usersTable);
             stmt.execute(booksTable); 
             stmt.execute(ordersTable);
             stmt.execute(orderDetailsTable);
+            stmt.execute(cartItemsTable);
 
             System.out.println("Created tables in the database, Success!!.");
         } catch (SQLException e) {

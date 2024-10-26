@@ -58,6 +58,15 @@ public class SignupController {
 	        String firstName = firstNamesignup.getText();
 	        String lastName = lastNamesignup.getText();
 
+	        if (containsNumbers(firstName)) {
+	            System.out.println("First name must not contain numeric characters.");
+	            return; // Exit if validation fails
+	        }
+	        
+	        if (containsNumbers(lastName)) {
+	            System.out.println("Last name must not contain numeric characters.");
+	            return; // Exit if validation fails
+	        }
 	        // Create a new User object
 	        User newUser = new User(username, password, firstName, lastName);
 
@@ -76,6 +85,9 @@ public class SignupController {
 	        dbConnection.closeConnection();
 	        
 	    }
+	 public boolean containsNumbers(String str) {
+		    return str.matches(".*\\d.*"); // Checks if the string contains any digit
+		}
 	 
 	 private void loadDashboard() {
 	        try {

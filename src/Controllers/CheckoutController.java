@@ -37,7 +37,7 @@ public class CheckoutController {
     private Button btnconfirm;
 
     @FXML
-    private TextField txtCreditCardNumber;
+	public TextField txtCreditCardNumber;
 
     @FXML
     private TextField txtCVV;
@@ -61,6 +61,7 @@ public class CheckoutController {
     private Label totalPriceLabel;
 
     private ShoppingCart shoppingCart;
+    
 
     public void setShoppingCart(ShoppingCart shoppingCart) {
         this.shoppingCart = shoppingCart;
@@ -193,6 +194,7 @@ public class CheckoutController {
             }
 
             conn.commit();
+            clearCartItemsFromDb();
             System.out.println("Order created successfully!");
         } catch (SQLException e) {
             System.err.println("Failed to create order: " + e.getMessage());
@@ -223,7 +225,7 @@ public class CheckoutController {
         return java.time.LocalDate.now().toString();
     }
 
-    private int getAvailableQuantity(String title) {
+    public int getAvailableQuantity(String title) {
         String url = "jdbc:sqlite:readingroom.db";
         String query = "SELECT quantity FROM books WHERE title = ?";
 
@@ -242,7 +244,21 @@ public class CheckoutController {
         return 0;
     }
 
-    private int getBookId(String title) {
+    private void clearCartItemsFromDb() {
+        String url = "jdbc:sqlite:readingroom.db";
+        String sql = "DELETE FROM cart_items WHERE user_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, getCurrentUserId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error clearing cart items: " + e.getMessage());
+        }
+    }
+
+    public int getBookId(String title) {
         String url = "jdbc:sqlite:readingroom.db";
         String query = "SELECT book_id FROM books WHERE title = ?";
 
@@ -280,11 +296,11 @@ public class CheckoutController {
         return creditCardNumber.length() == 16 && creditCardNumber.matches("\\d+");
     }
 
-    private boolean isValidCVV(String cvv) {
+    public boolean isValidCVV(String cvv) {
         return cvv.length() == 3 && cvv.matches("\\d+");
     }
 
-    private boolean isValidExpiryDate(String expiryDate) {
+    public boolean isValidExpiryDate(String expiryDate) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
             YearMonth expiryYearMonth = YearMonth.parse(expiryDate, formatter);
@@ -294,4 +310,6 @@ public class CheckoutController {
             return false;
         }
     }
+    
+
 }

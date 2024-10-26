@@ -1,5 +1,10 @@
 package Controllers;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import Model.CartItem;
 import Model.ShoppingCart;
 import javafx.fxml.FXML;
@@ -31,6 +36,11 @@ public class CartController {
     private Label errorMessage; // Add this for error messages
 
     private ShoppingCart shoppingCart;
+    private int currentUserId; // Add this field
+
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
+    }
 
     public void setShoppingCart(ShoppingCart shoppingCart) {
         this.shoppingCart = shoppingCart;
@@ -72,7 +82,8 @@ public class CartController {
             });
 
             removeButton.setOnAction(event -> {
-                shoppingCart.removeItem(item); // Remove item from cart
+                shoppingCart.removeItem(item);
+                removeCartItemFromDb(item);// Remove item from cart
                 displayCartItems(); // Refresh the cart display
             });
 
@@ -81,7 +92,8 @@ public class CartController {
                 try {
                     int quantity = Integer.parseInt(newText.isEmpty() ? "0" : newText);
                     if (quantity <= item.getAvailableQuantity()) {
-                        item.setQuantity(quantity); // Update the quantity in the CartItem
+                        item.setQuantity(quantity);
+                        updateCartItemInDb(item);// Update the quantity in the CartItem
                         errorMessage.setText(""); // Clear any previous error
                     } else {
                         errorMessage.setText("Only " + item.getAvailableQuantity() + " available for " + item.getTitle());
@@ -144,6 +156,58 @@ public class CartController {
             System.err.println("Failed to load checkout page: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    private void updateCartItemInDb(CartItem item) {
+        String url = "jdbc:sqlite:readingroom.db";
+        String sql = "UPDATE cart_items SET quantity = ? WHERE user_id = ? AND book_title = ?";
+        
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, item.getQuantity());
+            pstmt.setInt(2, currentUserId);
+            pstmt.setString(3, item.getTitle());
+            pstmt.setInt(3, getBookId(item.getTitle()));
+            
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeCartItemFromDb(CartItem item) {
+        String url = "jdbc:sqlite:readingroom.db";
+        String sql = "DELETE FROM cart_items WHERE user_id = ? AND book_title = ?";
+        
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, currentUserId);
+            pstmt.setString(2, item.getTitle());
+            
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private int getBookId(String title) {
+        String url = "jdbc:sqlite:readingroom.db";
+        String sql = "SELECT book_id FROM books WHERE title = ?";
+        
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, title);
+            var rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("book_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
 
