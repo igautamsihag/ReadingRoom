@@ -2,12 +2,14 @@ package Model;
 
 public class User {
 
+	// user class attribute declaration
 	private int id;
 	private String username;
 	private String password;
 	private String firstName;
 	private String lastName;
 	
+	// user class constructor method
 	public User(String username, String password, String firstName, String lastName) {
 		this.username = username;
 		this.password = password;
@@ -16,6 +18,7 @@ public class User {
 		this.id = 0;
 	}
 	
+	// user class setter methods
 	public void setID(int id) {
 		this.id = id;
 	}
@@ -36,6 +39,7 @@ public class User {
 		this.lastName = lastName;
 	}
 	
+	// user class getter methods
 	public int getID() {
 		return id;
 	}

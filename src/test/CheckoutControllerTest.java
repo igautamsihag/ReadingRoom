@@ -19,35 +19,35 @@ public class CheckoutControllerTest {
 
     @Test
     public void testValidCreditCard() {
-        String validCreditCard = "1234567812345678"; // Example valid card number
-        String invalidCreditCard = "1234abcd56789012"; // Example invalid card number
-
-        assertTrue(checkoutController.isValidCreditCard(validCreditCard));
-        assertFalse(checkoutController.isValidCreditCard(invalidCreditCard));
+        String validCreditCard = "1234567812345678"; 
+        String invalidCreditCard = "1234abcd56789012"; 
+        
+        assertTrue(checkoutController.validateCreditCard(validCreditCard));
+        assertFalse(checkoutController.validateCreditCard(invalidCreditCard));
         
     }
 
     @Test
     public void testValidCVV() {
-        String validCVV = "123"; // Example valid CVV
-        String invalidCVV = "12a"; // Example invalid CVV
-        String tooLongCVV = "1234"; // CVV too long
+        String validCVV = "999"; // Example valid CVV
+        String invalidCVV = "89z"; // Example invalid CVV
+        String invalidCVV2 = "9024"; // CVV too long
 
-        assertTrue(checkoutController.isValidCVV(validCVV));
-        assertFalse(checkoutController.isValidCVV(invalidCVV));
-        assertFalse(checkoutController.isValidCVV(tooLongCVV));
+        assertTrue(checkoutController.validateCVV(validCVV));
+        assertFalse(checkoutController.validateCVV(invalidCVV));
+        assertFalse(checkoutController.validateCVV(invalidCVV2));
     }
 
     @Test
     public void testValidExpiryDate() {
-        String validExpiryDate = "12/2025"; // Future date
-        String pastExpiryDate = "01/2020"; // Past date
-        String invalidFormatDate = "2025/12"; // Incorrect format
-        String invalidMonthDate = "13/2025"; // Invalid month
+        String firsttest = "12/2025"; // Future date
+        String secondtest = "01/2020"; // Past date
+        String thirdtest = "2025/12"; // Incorrect format
+        String fourthtest = "13/2025"; // Invalid month
 
-        assertTrue(checkoutController.isValidExpiryDate(validExpiryDate));
-        assertFalse(checkoutController.isValidExpiryDate(pastExpiryDate));
-        assertFalse(checkoutController.isValidExpiryDate(invalidFormatDate));
-        assertFalse(checkoutController.isValidExpiryDate(invalidMonthDate));
+        assertTrue(checkoutController.validateExpiryDate(firsttest));
+        assertFalse(checkoutController.validateExpiryDate(secondtest));
+        assertFalse(checkoutController.validateExpiryDate(thirdtest));
+        assertFalse(checkoutController.validateExpiryDate(fourthtest));
     }
 }

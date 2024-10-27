@@ -22,13 +22,13 @@
         </AnchorPane>
     </top>
     <center>
-        <TableView fx:id="orderTable" prefHeight="402.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <TableView fx:id="orderHistory" prefHeight="402.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="orderIdColumn" text="Order ID" />
-                <TableColumn fx:id="orderDateColumn" text="Date" />
-                <TableColumn fx:id="totalPriceColumn" text="Total Price" />
-                <TableColumn fx:id="viewColumn" text="View" />
-                <TableColumn fx:id="exportColumn" text="Export" />
+                <TableColumn fx:id="orderId" text="Order ID" />
+                <TableColumn fx:id="orderDate" text="Date" />
+                <TableColumn fx:id="totalPrice" text="Total Price" />
+                <TableColumn fx:id="view" text="View" />
+                <TableColumn fx:id="export" text="Export" />
             </columns>
          <BorderPane.margin>
             <Insets left="150.0" right="50.0" />

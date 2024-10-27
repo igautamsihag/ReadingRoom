@@ -9,18 +9,17 @@ import Model.BookRegistration;
 
 public class CreateDatabase {
 	
-	// creating a constant variable for the url of the reading room database
+	// creating a constant variable for the file location of the reading room database
     private static final String DATABASE_URL = "jdbc:sqlite:readingroom.db";
 
-    // this method is responsible for creating a database, creating tables and registering the books
+    // this method is responsible for creating a database, creating tables and adding the books to the database
     public static void main(String[] args) {
         setupDatabase();
-        
-        // creating an object of BookRegistration class to register all the specified books in the database
         BookRegistration bookRegistration = new BookRegistration();
-        bookRegistration.registerBooks();
+        bookRegistration.addBooks();
     }
 
+    // method to set up the database
     public static void setupDatabase() {
         createDatabase();
         createTables();
@@ -30,24 +29,24 @@ public class CreateDatabase {
     private static void createDatabase() {
         try (Connection conn = DriverManager.getConnection(DATABASE_URL)) {
             if (conn != null) {
-                System.out.println("A new database has been created.");
+                System.out.println("A new database has been set up for the reading room application.");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    // method to create the users, books, orders and order_details tables in the reading room database
+    // method to create the users, books, orders, order_details and cart_items tables in the reading room database
     private static void createTables() {
     	
-    	String dropUsersTable = "DROP TABLE IF EXISTS users;";
-    	String dropBooksTable = "DROP TABLE IF EXISTS books;";
-    	String dropOrdersTable = "DROP TABLE IF EXISTS orders;";
-    	String dropOrderDetailsTable = "DROP TABLE IF EXISTS order_details;";
-    	String dropCartItemsTable = "DROP TABLE IF EXISTS cart_items;";
+    	String deletingUsersTable = "DROP TABLE IF EXISTS users;";
+    	String deletingBooksTable = "DROP TABLE IF EXISTS books;";
+    	String deletingOrdersTable = "DROP TABLE IF EXISTS orders;";
+    	String deletingOrderDetailsTable = "DROP TABLE IF EXISTS order_details;";
+    	String deletingCartItemsTable = "DROP TABLE IF EXISTS cart_items;";
     	
     	// SQL statements to create users table
-        String usersTable = "CREATE TABLE IF NOT EXISTS users (" +
+        String creatingUsersTable = "CREATE TABLE IF NOT EXISTS users (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "username TEXT NOT NULL UNIQUE," +
                 "password TEXT NOT NULL," +
@@ -56,7 +55,7 @@ public class CreateDatabase {
                 ");";
         
         // SQL statements to create books table
-        String booksTable = "CREATE TABLE IF NOT EXISTS books (" +
+        String creatingBooksTable = "CREATE TABLE IF NOT EXISTS books (" +
                 "book_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "title TEXT NOT NULL UNIQUE," +
                 "author TEXT NOT NULL," +
@@ -66,7 +65,7 @@ public class CreateDatabase {
                 ");";
 
         // SQL statements to create orders table
-        String ordersTable = "CREATE TABLE IF NOT EXISTS orders (" +
+        String creatingOrdersTable = "CREATE TABLE IF NOT EXISTS orders (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "user_id INTEGER," +
                 "order_date TEXT NOT NULL," +
@@ -75,7 +74,7 @@ public class CreateDatabase {
                 ");";
 
         // SQL statements to create order_details table
-        String orderDetailsTable = "CREATE TABLE IF NOT EXISTS order_details (" +
+        String creatingOrderDetailsTable = "CREATE TABLE IF NOT EXISTS order_details (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "order_id INTEGER," +
                 "book_id INTEGER," +
@@ -85,7 +84,8 @@ public class CreateDatabase {
                 "FOREIGN KEY (book_id) REFERENCES books (book_id)" +
                 ");";
         
-        String cartItemsTable = "CREATE TABLE IF NOT EXISTS cart_items (" +
+        // SQL statements to create cart items table
+        String creatingCartItemsTable = "CREATE TABLE IF NOT EXISTS cart_items (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "user_id INTEGER NOT NULL," +
                 "book_id INTEGER NOT NULL," +
@@ -100,16 +100,16 @@ public class CreateDatabase {
              Statement stmt = conn.createStatement()) {
 
         	// executing the statements
-        	stmt.execute(dropUsersTable);
-        	stmt.execute(dropBooksTable);
-        	stmt.execute(dropOrdersTable);
-        	stmt.execute(dropOrderDetailsTable);
-        	stmt.execute(dropCartItemsTable);
-            stmt.execute(usersTable);
-            stmt.execute(booksTable); 
-            stmt.execute(ordersTable);
-            stmt.execute(orderDetailsTable);
-            stmt.execute(cartItemsTable);
+        	stmt.execute(deletingUsersTable);
+        	stmt.execute(deletingBooksTable);
+        	stmt.execute(deletingOrdersTable);
+        	stmt.execute(deletingOrderDetailsTable);
+        	stmt.execute(deletingCartItemsTable);
+            stmt.execute(creatingUsersTable);
+            stmt.execute(creatingBooksTable); 
+            stmt.execute(creatingOrdersTable);
+            stmt.execute(creatingOrderDetailsTable);
+            stmt.execute(creatingCartItemsTable);
 
             System.out.println("Created tables in the database, Success!!.");
         } catch (SQLException e) {

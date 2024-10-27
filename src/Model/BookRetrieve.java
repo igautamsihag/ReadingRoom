@@ -6,20 +6,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookRetrieve {
+	
+	// constant String variable DATABASE_URL to declare the database file location 
     private static final String DATABASE_URL = "jdbc:sqlite:readingroom.db";
 
-    // method to retrieve all the books
+    // method to access the books from the database
     public List<Book> getBooks() {
     	
     	// storing the books in a arrayList
         List<Book> books = new ArrayList<>();
-        String bookQuery = "SELECT title, author, price, quantity, sold FROM books";
+        
+        // defining the SQL statement to get the books from the database
+        String bookAccessSQLStatement = "SELECT title, author, price, quantity, sold FROM books";
 
+        // establishing a database connection to insert data in the database
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);
              Statement smt = connection.createStatement();
-             ResultSet rs = smt.executeQuery(bookQuery)) {
+             ResultSet rs = smt.executeQuery(bookAccessSQLStatement)) {
 
-        	// retrieving each info of a particular book and adding it to an arrayList
+        	// using a while loop to access each feature of all book records and adding it to an arrayList
             while (rs.next()) {
                 String title = rs.getString("title");
                 String author = rs.getString("author");
@@ -27,6 +32,7 @@ public class BookRetrieve {
                 int quantity = rs.getInt("quantity");
                 int sold = rs.getInt("sold");
 
+                // Book object is created and added to the books arrayList.
                 books.add(new Book(title, author, price, quantity, sold));
             }
         } catch (SQLException e) {
@@ -35,17 +41,21 @@ public class BookRetrieve {
         return books;
     }
     
+    // defining a method to update the quantity of a particular book
     public boolean updateBookQuantity(Book book) {
-        String updateQuery = "UPDATE books SET quantity = ? WHERE title = ?";
+    	
+    	// defining the SQL statement to update the book quantity in the database
+        String updateBookSQLStatement = "UPDATE books SET quantity = ? WHERE title = ?";
         
+        // establishing a database connection to insert data in the database
         try (Connection connection = DriverManager.getConnection(DATABASE_URL);
-             PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+             PreparedStatement pstmt = connection.prepareStatement(updateBookSQLStatement)) {
             
+        	// executing the book update statements
             pstmt.setInt(1, book.getQuantity());
-            pstmt.setString(2, book.getTitle());
-            
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
+            pstmt.setString(2, book.getTitle());     
+            int updatedBookRows = pstmt.executeUpdate();
+            return updatedBookRows > 0;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return false;

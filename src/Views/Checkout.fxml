@@ -29,7 +29,7 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="totalPriceLabel" layoutX="227.0" layoutY="86.0" text="Label">
+            <Label fx:id="pricelabel" layoutX="227.0" layoutY="86.0" text="Label">
                <font>
                   <Font name="Arial Bold" size="15.0" />
                </font>

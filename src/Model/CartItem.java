@@ -1,18 +1,23 @@
 package Model;
 
+// Cart item class that is representing a single item of the shopping cart
 public class CartItem {
+	
+	// cart item class attribute declaration
     private String title;
     private int quantity;
     private double price;
-    private int availableQuantity; // Add this field
+    private int availableQuantity; 
 
+    // cart item class constructor method
     public CartItem(String title, int quantity, double price, int availableQuantity) {
         this.title = title;
         this.quantity = quantity;
         this.price = price;
-        this.availableQuantity = availableQuantity; // Initialize available quantity
+        this.availableQuantity = availableQuantity; 
     }
 
+    // cart item class getter methods
     public String getTitle() {
         return title;
     }
@@ -29,16 +34,15 @@ public class CartItem {
         return price * quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    // New method to get available quantity
     public int getAvailableQuantity() {
         return availableQuantity;
     }
 
-    // Optionally, you can also set available quantity if needed
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    // method to set the available quantity of the book in case book quantity gets updated from the shopping cart page
     public void setAvailableQuantity(int availableQuantity) {
         this.availableQuantity = availableQuantity;
     }

@@ -25,7 +25,7 @@
                </font>
             </Button>
             <VBox fx:id="bookList" layoutX="44.0" layoutY="61.0" prefHeight="303.0" prefWidth="566.0" />
-            <Label fx:id="errorMessage" layoutX="44.0" layoutY="30.0" textFill="red" />
+            <Label fx:id="errorlabels" layoutX="44.0" layoutY="30.0" textFill="red" />
          </children>
       </AnchorPane>
    </bottom>
@@ -47,51 +47,3 @@
    </top>
 </BorderPane>
 
-
-
-<!-- 
-<?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.CartController">
-   <bottom>
-      <AnchorPane prefHeight="535.0" prefWidth="800.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="btncheck" layoutX="603.0" layoutY="399.0" mnemonicParsing="false" onAction="#goToCheckout" style="-fx-background-color: black;" text="Check Out" textFill="WHITE">
-               <font>
-                  <Font name="Arial Bold" size="14.0" />
-               </font>
-            </Button>
-            <Button fx:id="btndashboard" layoutX="603.0" layoutY="450.0" mnemonicParsing="false" onAction="#goToDashboard" prefHeight="26.0" prefWidth="88.0" style="-fx-background-color: black;" text="Go Back" textFill="WHITE">
-               <font>
-                  <Font name="Arial Bold" size="14.0" />
-               </font>
-            </Button>
-            <VBox fx:id="bookList" layoutX="44.0" layoutY="61.0" prefHeight="303.0" prefWidth="566.0" />
-         </children>
-      </AnchorPane>
-   </bottom>
-   <top>
-      <AnchorPane prefHeight="77.0" prefWidth="800.0" style="-fx-background-color: ffbf7a;" BorderPane.alignment="CENTER">
-         <children>
-            <Text layoutX="50.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cart">
-               <font>
-                  <Font name="Arial Bold" size="25.0" />
-               </font>
-            </Text>
-            <Button fx:id="btnlogout" layoutX="681.0" layoutY="22.0" mnemonicParsing="false" onAction="#goToLogOut" prefHeight="31.0" prefWidth="82.0" style="-fx-background-color: black;" text="Log Out" textFill="WHITE">
-               <font>
-                  <Font name="Arial Bold" size="13.0" />
-               </font>
-            </Button>
-         </children>
-      </AnchorPane>
-   </top>
-</BorderPane>
- -->

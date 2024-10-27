@@ -20,12 +20,16 @@ import javafx.util.converter.IntegerStringConverter;
 import java.util.List;
 
 public class AdminDashboardController {
-
-	// Initializing UI components into the fields
+	
+	// FXML statement to link the UI components
+	// button for log out
 	@FXML
 	private Button btnlogout;
+	// creating a table to display every book and corresponding details in a table
     @FXML
     private TableView<Book> booksTable;
+    
+    // columns for individual book details such as title, author, price, quantity and sold copies
     @FXML
     private TableColumn<Book, String> titleColumn;
     @FXML
@@ -37,11 +41,17 @@ public class AdminDashboardController {
     @FXML
     private TableColumn<Book, Integer> soldColumn;
 
+    
+    // (Matiullah KarimiMatiullah Karimi 1 et al., What is the difference between arraylist and observablelist? 1962)
+    // creating an instance of Book Retrieve to communicate with the database and an observable list to hold the book data
     private ObservableList<Book> bookList;
     private BookRetrieve bookDAO;
 
+    // (Property Value Factory 2019)
+    // using a set cell value factory because it will connect each cell by each book detail and display it in the table cell
     @FXML
     public void initialize() {
+    	// initializing a book retrieve instance and loading up the book details in corresponding table columns
     	bookDAO = new BookRetrieve();
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -55,12 +65,14 @@ public class AdminDashboardController {
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         soldColumn.setCellValueFactory(new PropertyValueFactory<>("sold"));
 
-        // Make the quantity column editable
+        // Making the quantity column editable upon mouse click 
+        // (sifsif 208k1616 gold badges307307 silver badges340340 bronze badges, Make individual cell editable in javafx tableview 1960)
         quantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         quantityColumn.setOnEditCommit(event -> {
             Book book = event.getRowValue();
             int newQuantity = event.getNewValue();
             book.setQuantity(newQuantity);
+            // calling the updateBookQuantity method to update the book quantity
             updateBookQuantity(book);
         });
 
@@ -68,25 +80,27 @@ public class AdminDashboardController {
         loadBooks();
     }
 
+    // method to load the books using book retrieve instance and display them in a table
     private void loadBooks() {
         BookRetrieve bookDAO = new BookRetrieve();
+        // Retrieving the books and loading them in the table
         List<Book> books = bookDAO.getBooks();
         bookList = FXCollections.observableArrayList(books);
         booksTable.setItems(bookList);
     }
     
+    // method to update the quantity of the book by the admin
     private void updateBookQuantity(Book book) {
-        boolean success = bookDAO.updateBookQuantity(book);
-        if (success) {
-            System.out.println("Book quantity updated successfully");
+        boolean bookUpdated = bookDAO.updateBookQuantity(book);
+        if (bookUpdated) {
+            System.out.println("Book quantity in the database is updated successfully");
         } else {
-            System.out.println("Failed to update book quantity");
-            // Optionally, you can show an alert to the user
-            showAlert("Update Failed", "Failed to update book quantity. Please try again.");
+            showAlert("Update Failed", "Please try again. Cannot update book quantity");
         }
     }
 
-    private void showAlert(String title, String content) {
+    // show alert method that creates alert dialog and displays an error message
+    private void showAlert(String title, String content) {		// 	(Alert JavaFX 2015)
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -94,16 +108,24 @@ public class AdminDashboardController {
         alert.showAndWait();
     }
     
+    // method to navigate the administrator back to the log in page
     public void goToLogOut() {
-        System.out.println("Logout button clicked!");
+        System.out.println("Logout button clicked by the admin");
         try {
             Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
             Stage stage = (Stage) btnlogout.getScene().getWindow();
             stage.setScene(new Scene(loginPage));
             stage.show();
         } catch (Exception e) {
-            System.err.println("Failed to load Login page: " + e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
     }
 }
+
+// References
+
+// Alert JavaFX (2015) Alert (javafx 8). Available at: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Alert.html (Accessed: 18 October 2024). 
+// Matiullah KarimiMatiullah Karimi 1 et al. (1962) What is the difference between arraylist and observablelist?, Stack Overflow. Available at: https://stackoverflow.com/questions/41920217/what-is-the-difference-between-arraylist-and-observablelist (Accessed: 18 October 2024). 
+// Property Value Factory (2019) Propertyvaluefactory (javafx 12). Available at: https://openjfx.io/javadoc/12/javafx.controls/javafx/scene/control/cell/PropertyValueFactory.html (Accessed: 14 October 2024). 
+// sifsif 4911 gold badge11 silver badge22 bronze badges and James_DJames_D 208k1616 gold badges307307 silver badges340340 bronze badges (1960) Make individual cell editable in javafx tableview, Stack Overflow. Available at: https://stackoverflow.com/questions/28414825/make-individual-cell-editable-in-javafx-tableview (Accessed: 17 October 2024). 

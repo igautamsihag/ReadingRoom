@@ -1,5 +1,6 @@
 package Controllers;
 
+// importing all the necessary required libraries for this dash board controller
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,98 +25,122 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 
 public class DashboardController {
-	
-	private ShoppingCart shoppingCart; // Add this field
+	// shopping cart instance to hold books in the cart
+	private ShoppingCart shoppingCart; 
 
+	// initializing the shopping cart object using Dash board controller constructor method
     public DashboardController() {
-        shoppingCart = new ShoppingCart(); // Initialize the shopping cart
+        shoppingCart = new ShoppingCart(); 
     }
 
+    // FXML statement to link the UI components
+ 	// button for log out
 	@FXML
 	private Button btnlogout;
 
+	// button for cart page
 	@FXML
 	private Button btncart;
 
+	// button for checkout page
 	@FXML
 	private Button btncheck;
 
+	// button for edit profile page
 	@FXML
 	private Button btnedit;
 
+	// button for implementing search books
 	@FXML
 	private Button btnsearch;
 
+	// label for displaying welcome message
 	@FXML
 	private Label welcomeLabel;
 
+	// text field for book title input
 	@FXML
 	private TextField inputsearch;
 
+	// v box for displaying popular books
 	@FXML
 	private VBox popularBooksList;
 
+	// button for listing all books
 	@FXML
 	private Button btnlist;
 	
+	// button for order details page
 	@FXML
 	private Button btndetails;
 	
+	// label for displaying error messages
 	@FXML
-	private Label messageLabel;
+	private Label errorlabel;
 	
+	// variable for setting the current user id
 	private int currentUserId;
 
+	// method to display top 5 famous books in the dash board page
 	@FXML
 	public void initialize() {
-		System.out.println("Initializing DashboardController");
-
-		// Check if buttons are properly initialized
-		System.out.println("btnlogout: " + (btnlogout == null ? "null" : "initialized"));
-		//System.out.println("btnexport: " + (btnexport == null ? "null" : "initialized"));
-		// System.out.println("btncart: " + (btncart == null ? "null" : "initialized"));
-
-		// Load the top 5 popular books
-		List<String> popularBooks = getTop5PopularBooks();
-		// popularBooksList.getItems().addAll(popularBooks);
-		populateBooks(popularBooks);
+		List<String> popularBooks = getFamousBooks();
+		displayBooks(popularBooks);
 	}
 
+	// method to load items from cart items table based on the user id 
 	public void setCurrentUserId(int userId) {
 	    this.currentUserId = userId;
-	    loadUserCart(); // Load the cart when user ID is set
+	    loadUserCart(); 
 	}
 	
-	private void loadUserCart() {
-	    String url = "jdbc:sqlite:readingroom.db";
-	    String sql = "SELECT book_id, quantity, price FROM cart_items WHERE user_id = ?";
+	// method to load any items available in the cart for the user
+	public void loadUserCart() {
+		
+		// String variable DATABASE_URL to declare the database file location
+	    String DATABASE_URL = "jdbc:sqlite:readingroom.db";
 	    
-	    try (Connection conn = DriverManager.getConnection(url);
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	    // defining the SQL statement to fetch the book items in the database
+	    String getItemSQLStatement = "SELECT book_id, quantity, price FROM cart_items WHERE user_id = ?";
+	    
+	    // establishing a database connection to get items
+	    try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+	         PreparedStatement pstmt = conn.prepareStatement(getItemSQLStatement)) {
 	        
+	    	// executing SQL statements
 	        pstmt.setInt(1, currentUserId);
 	        ResultSet rs = pstmt.executeQuery();
 	        
+	        // using  a while loop to get the fetch the  book items
 	        while (rs.next()) {
 	        	int bookId = rs.getInt("book_id");
 	        	String title = getBookTitle(bookId);
 	            int quantity = rs.getInt("quantity");
 	            double price = rs.getDouble("price");
-	            int availableQuantity = getAvailableQuantity(title);
+	            int availableStock = getAvailableStock(title);
 	            
-	            // Add item to shopping cart
-	            shoppingCart.addItem(new CartItem(title, quantity, price, availableQuantity));
+	            // Adding the item to the shopping cart
+	            shoppingCart.addItem(new CartItem(title, quantity, price, availableStock));
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	}
 	
+	// method to get the book title based on the book id
 	private String getBookTitle(int bookId) {
-	    String url = "jdbc:sqlite:readingroom.db";
-	    String sql = "SELECT title FROM books WHERE book_id = ?";
-	    try (Connection conn = DriverManager.getConnection(url);
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		
+		// String variable DATABASE_URL to declare the database file location
+	    String DATABASE_URL = "jdbc:sqlite:readingroom.db";
+	    
+	    // defining the SQL statement to get the book title from the database
+	    String bookTitleSQLStatement = "SELECT title FROM books WHERE book_id = ?";
+	    
+	    // establishing a database connection to fetch book title
+	    try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+	         PreparedStatement pstmt = conn.prepareStatement(bookTitleSQLStatement )) {
+	    	
+	    	// executing the statement
 	        pstmt.setInt(1, bookId);
 	        ResultSet rs = pstmt.executeQuery();
 	        if (rs.next()) {
@@ -124,33 +149,48 @@ public class DashboardController {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    return null; // Or throw an exception if the book is not found
+	    return null; 
 	}
 
 
-	private void saveCartItem(CartItem item) {
-	    String url = "jdbc:sqlite:readingroom.db";
-	    String sql = "INSERT INTO cart_items (user_id, book_id, quantity, price) VALUES (?, ?, ?, ?)";
+	// method to save a new item in the cart items database 
+	private void addCartItem(CartItem item) {
+		
+		// String variable DATABASE_URL to declare the database file location
+	    String DATABASE_URL = "jdbc:sqlite:readingroom.db";
 	    
-	    try (Connection conn = DriverManager.getConnection(url);
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	    // defining the SQL statement to save the book items in the cart items table
+	    String addItemSQLStatement = "INSERT INTO cart_items (user_id, book_id, quantity, price) VALUES (?, ?, ?, ?)";
+	    
+	    // establishing a database connection to add book item in the cart item table
+	    try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+	         PreparedStatement pstmt = conn.prepareStatement(addItemSQLStatement)) {
 	        
+	    	// executing the SQL statement
 	        pstmt.setInt(1, currentUserId);
 	        pstmt.setInt(2, getBookId(item.getTitle()));
 	        pstmt.setInt(3, item.getQuantity());
-	        pstmt.setDouble(4, item.getPrice());
-	        
+	        pstmt.setDouble(4, item.getPrice());	        
 	        pstmt.executeUpdate();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	}
 
+	// method to get the book id from the table based on the book title
 	private int getBookId(String title) {
-	    String url = "jdbc:sqlite:readingroom.db";
-	    String sql = "SELECT book_id FROM books WHERE title = ?";
-	    try (Connection conn = DriverManager.getConnection(url);
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		
+		// String variable DATABASE_URL to declare the database file location
+	    String DATABASE_URL = "jdbc:sqlite:readingroom.db";
+	    
+	    // defining the SQL statement to save the book items in the cart items table
+	    String bookIdSQLStatement = "SELECT book_id FROM books WHERE title = ?";
+	    
+	    // establishing a database connection to get book id from the table
+	    try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+	         PreparedStatement pstmt = conn.prepareStatement(bookIdSQLStatement)) {
+	    	
+	    	// executing the SQL statement
 	        pstmt.setString(1, title);
 	        ResultSet rs = pstmt.executeQuery();
 	        if (rs.next()) {
@@ -159,70 +199,85 @@ public class DashboardController {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    return -1; // Or throw an exception if the book is not found
+	    return 0; 
 	}
 
-	
-	private void populateBooks(List<String> books) {
+	// method to display a list of books in HBOX
+	private void displayBooks(List<String> books) {
+		
+		// Clearing all the previous books in the list and error messages
 		popularBooksList.getChildren().clear();
-		messageLabel.setText("");// Clear previous entries
+		errorlabel.setText("");
+		
+		// using a for loop to iterate over each book in the array list to display them in the H box
 		for (String title : books) {
-			// Create a horizontal layout for each book
-			HBox bookItem = new HBox(10); // spacing of 10
-			Label bookLabel = new Label(title);
-			TextField quantityField = new TextField(); // Default quantity
+			// creating a H box to display a book row consisting its details
+			HBox bookRow = new HBox(10); 
+			// creating a label for displaying book title
+			Label bookTitle = new Label(title);
+			// creating a text field for the user to enter the quantity of the book
+			TextField quantityField = new TextField();
+			// creating a buy button
 			Button buyButton = new Button("Buy");
-
-			int availableQuantity = getAvailableQuantity(title);
+			
+			// calling the method to get available quantity of the book
+			int availableStock = getAvailableStock(title);
 			buyButton.setOnAction(event -> {
 				String quantityText = quantityField.getText();
-				// Add your buy logic here
+			
 				int bookquantity = Integer.parseInt(quantityText.isEmpty() ? "0" : quantityText);
-				if (bookquantity > availableQuantity) {
-					messageLabel.setText("Only " + availableQuantity + " copies of " + title + " are available.");
-	                System.out.println("Only " + availableQuantity + " copies of " + title + " are available.");
-	                // Display an error message to the user
-	                // You might want to use a Label or Dialog for this purpose
-	                return; // Stop further execution
+				if (bookquantity > availableStock) {
+					errorlabel.setText("There is only " + availableStock + " stock left for " + title + " !!");
+	                return; 
 	            }
-                double price = getBookPrice(title); // Assume a method to get price
-                CartItem item = new CartItem(title, bookquantity, price, availableQuantity);
+				// adding the items to the cart item
+                double price = getBookPrice(title); 
+                CartItem item = new CartItem(title, bookquantity, price, availableStock);
                 shoppingCart.addItem(item);
-                saveCartItem(item);
-				System.out.println("Buying " + quantityText + " copies of " + title);
+                addCartItem(item);
 			});
 
-			bookItem.getChildren().addAll(bookLabel, quantityField, buyButton);
-			popularBooksList.getChildren().add(bookItem);
+			bookRow.getChildren().addAll(bookTitle, quantityField, buyButton);
+			popularBooksList.getChildren().add(bookRow);
 		}
 	}
 	
-	private int getAvailableQuantity(String title) {
-	    String url = "jdbc:sqlite:readingroom.db"; // Update with your DB path
-	    String sql = "SELECT quantity FROM books WHERE title = ?"; // Adjust this query based on your database schema
+	private int getAvailableStock(String title) {
+		
+		// String variable DATABASE_URL to declare the database file location
+	    String DATABASE_URL = "jdbc:sqlite:readingroom.db"; 
+	    
+	    // defining the SQL statement to get the book stock from the table
+	    String getStockSQLStatement = "SELECT quantity FROM books WHERE title = ?"; 
 
-	    try (Connection conn = DriverManager.getConnection(url);
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	    // establishing the database connection and executing the sql statement
+	    try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+	         PreparedStatement pstmt = conn.prepareStatement(getStockSQLStatement)) {
 
 	        pstmt.setString(1, title);
 	        ResultSet rs = pstmt.executeQuery();
 
 	        if (rs.next()) {
-	            return rs.getInt("quantity"); // Ensure this matches your column name for available quantity
+	            return rs.getInt("quantity"); 
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 
-	    return 0; // Default if not found
+	    return 0;
 	}
 	
 	private double getBookPrice(String title) {
-		String url = "jdbc:sqlite:readingroom.db"; // Update with your DB path
-	    String sql = "SELECT price FROM books WHERE title = ?";
+		
+		// String variable DATABASE_URL to declare the database file location
+		String DATABASE_URL = "jdbc:sqlite:readingroom.db"; 
+		
+		// defining the SQL statement to get the book price from the table
+	    String bookPriceSQLStatement = "SELECT price FROM books WHERE title = ?";
 
-	    try (Connection conn = DriverManager.getConnection(url);
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	    // establishing the database connection and executing the sql statement
+	    try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+	         PreparedStatement pstmt = conn.prepareStatement(bookPriceSQLStatement)) {
 
 	        pstmt.setString(1, title);
 	        ResultSet rs = pstmt.executeQuery();
@@ -237,25 +292,30 @@ public class DashboardController {
 	    return 0.0;
     }
 
-//	public void setUsername(String username) {
-//		welcomeLabel.setText("Welcome, " + username + "!");
-//	}
-	
+	// method to display the first name in the welcome label
 	public void setFirstName(String firstName) {
 	    welcomeLabel.setText("Welcome, " + firstName + "!");
 	}
 
 
-	private List<String> getTop5PopularBooks() {
+	// method to retrieve top 5 popular books based on sold copies
+	private List<String> getFamousBooks() {
+		
+		// creating a new arrayList to store top 5 popular books
 		List<String> books = new ArrayList<>();
-		String url = "jdbc:sqlite:readingroom.db"; // Update with your DB path
+		
+		// String variable DATABASE_URL to declare the database file location
+		String DATABASE_URL = "jdbc:sqlite:readingroom.db"; 
 
-		String sql = "SELECT title FROM books ORDER BY sold DESC LIMIT 5";
+		// defining the SQL statement to get top 5 the books from the table
+		String famousBookSQLStatement = "SELECT title FROM books ORDER BY sold DESC LIMIT 5";
 
-		try (Connection conn = DriverManager.getConnection(url);
-				PreparedStatement pstmt = conn.prepareStatement(sql);
+		// establishing the database connection and executing the sql statement
+		try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+				PreparedStatement pstmt = conn.prepareStatement(famousBookSQLStatement);
 				ResultSet rs = pstmt.executeQuery()) {
 
+			// using a while loop to get famous book and adding them to the arrayList
 			while (rs.next()) {
 				books.add(rs.getString("title"));
 			}
@@ -266,17 +326,24 @@ public class DashboardController {
 		return books;
 	}
 
+	// method to retrieve all books
 	@FXML
 	public void listAllBooks(ActionEvent event) {
+		// creating a new arrayList to store all books
 		List<String> books = new ArrayList<>();
-		String url = "jdbc:sqlite:readingroom.db"; // Update with your DB path
+		
+		// String variable DATABASE_URL to declare the database file location
+		String DATABASE_URL = "jdbc:sqlite:readingroom.db"; 
 
-		String sql = "SELECT title FROM books";
+		// defining the SQL statement to list all the books from the table
+		String getBookSQLStatement = "SELECT title FROM books";
 
-		try (Connection conn = DriverManager.getConnection(url);
-				PreparedStatement pstmt = conn.prepareStatement(sql);
+		// establishing the database connection and executing the query
+		try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+				PreparedStatement pstmt = conn.prepareStatement(getBookSQLStatement);
 				ResultSet rs = pstmt.executeQuery()) {
 
+			// using a while loop to get books and adding them to the arrayList
 			while (rs.next()) {
 				books.add(rs.getString("title"));
 			}
@@ -284,33 +351,42 @@ public class DashboardController {
 			e.printStackTrace();
 		}
 
-		populateBooks(books);
-		// popularBooksList.getItems().clear();
-		// popularBooksList.getItems().addAll(books);
+		// calling the displayBooks method to display all the books
+		displayBooks(books);
 	}
 
+	// method to access books from the user search input
 	@FXML
 	public void searchBooks(ActionEvent event) {
-		String query = inputsearch.getText();
-		if (!query.isEmpty()) {
-			List<String> searchResults = searchBooksInDatabase(query);
-			//popularBooksList.getItems().clear(); // Clear previous results
-			//popularBooksList.getItems().addAll(searchResults);
-			populateBooks(searchResults);
+		// storing the search input entered by the user in a string variable
+		String searchEnter = inputsearch.getText();
+		if (!searchEnter.isEmpty()) {
+			List<String> searchResults = searchBooksFromTable(searchEnter);
+			// calling the displayBooks method to display searched books
+			displayBooks(searchResults);
 		}
 	}
 
-	private List<String> searchBooksInDatabase(String query) {
+	// method to search book from the database
+	private List<String> searchBooksFromTable(String searchEnter) {
+		
+		// creating a new arrayList to store all searched books
 		List<String> books = new ArrayList<>();
-		String url = "jdbc:sqlite:readingroom.db"; // Update with your DB path
+		
+		// String variable DATABASE_URL to declare the database file location
+		String DATABASE_URL = "jdbc:sqlite:readingroom.db"; 
 
-		String sql = "SELECT title FROM books WHERE title LIKE ?";
+		// defining the SQL statement to search the books from the table
+		String searchBookSQLStatement = "SELECT title FROM books WHERE title LIKE ?";
 
-		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		// establishing the database connection and executing the query
+		try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+				PreparedStatement pstmt = conn.prepareStatement(searchBookSQLStatement)) {
 
-			pstmt.setString(1, "%" + query + "%");
+			pstmt.setString(1, "%" + searchEnter + "%");
 			ResultSet rs = pstmt.executeQuery();
 
+			// using a while loop to add matching title books in the arrayList
 			while (rs.next()) {
 				books.add(rs.getString("title"));
 			}
@@ -321,102 +397,75 @@ public class DashboardController {
 		return books;
 	}
 
+	//  method to navigate the user to the log in page when logout button is clicked
 	public void goToLogOut() {
-		System.out.println("Logout button clicked!");
 		try {
 			Parent loginPage = FXMLLoader.load(getClass().getResource("/Views/Login.fxml"));
 			Stage stage = (Stage) btnlogout.getScene().getWindow();
 			stage.setScene(new Scene(loginPage));
 			stage.show();
 		} catch (Exception e) {
-			System.err.println("Failed to load Login page: " + e.getMessage());
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-//	public void goToExport() {
-//		System.out.println("Export button clicked!");
-//		try {
-//			Parent exportPage = FXMLLoader.load(getClass().getResource("/Views/Export.fxml"));
-//			Stage stage = (Stage) btnexport.getScene().getWindow();
-//			stage.setScene(new Scene(exportPage));
-//			stage.show();
-//		} catch (Exception e) {
-//			System.err.println("Failed to load export page: " + e.getMessage());
-//			e.printStackTrace();
-//		}
-//	}
-	
-//	public void goToOrders() {
-//	    System.out.println("Viewing all orders.");
-//	    try {
-//	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ViewOrder.fxml"));
-//	        Parent orderDetailsPage = loader.load();
-//	        Stage stage = (Stage) btnview.getScene().getWindow();
-//	        stage.setScene(new Scene(orderDetailsPage));
-//	        stage.show();
-//	    } catch (Exception e) {
-//	        System.err.println("Failed to load order details page: " + e.getMessage());
-//	        e.printStackTrace();
-//	    }
-//	}
-
+	//  method to navigate the user to the cart page when cart button is clicked
 	public void goToCart() {
-		System.out.println("Cart button clicked!");
 		try {
-			//Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/Cart.fxml"));
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Cart.fxml"));
 	        Parent cartPage = loader.load();
 	        CartController cartController = loader.getController();
+	        // passing the shopping cart object to the cart controller for accessing details
 	        cartController.setShoppingCart(shoppingCart);
 			Stage stage = (Stage) btncart.getScene().getWindow();
 			stage.setScene(new Scene(cartPage));
 			stage.show();
 		} catch (Exception e) {
-			System.err.println("Failed to load cart page: " + e.getMessage());
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
+	//  method to navigate the user to the checkout page when checkout button is clicked
 	public void goToCheckout() {
-		System.out.println("Cart button clicked!");
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Checkout.fxml")); // Create a new FXMLLoader instance
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/Checkout.fxml")); 
 	        Parent checkoutPage = loader.load();
-			//Parent checkoutPage = FXMLLoader.load(getClass().getResource("/Views/Checkout.fxml"));
 			CheckoutController checkoutController = loader.getController();
+			// passing the shopping cart object to the checkout controller for accessing details
             checkoutController.setShoppingCart(shoppingCart);
 			Stage stage = (Stage) btncheck.getScene().getWindow();
 			stage.setScene(new Scene(checkoutPage));
 			stage.show();
 		} catch (Exception e) {
-			System.err.println("Failed to load cart page: " + e.getMessage());
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
+	//  method to navigate the user to the edit profile page when edit button is clicked
 	public void goToEdit() {
-		System.out.println("Cart button clicked!");
 		try {
-			Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/EditProfile.fxml"));
+			Parent editPage = FXMLLoader.load(getClass().getResource("/Views/EditProfile.fxml"));
 			Stage stage = (Stage) btnedit.getScene().getWindow();
-			stage.setScene(new Scene(cartPage));
+			stage.setScene(new Scene(editPage));
 			stage.show();
 		} catch (Exception e) {
-			System.err.println("Failed to load cart page: " + e.getMessage());
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	
+	//  method to navigate the user to the order history page when view order details button is clicked
 	public void goToOrderDetails() {
-		System.out.println("Cart button clicked!");
 		try {
-			Parent cartPage = FXMLLoader.load(getClass().getResource("/Views/OrderView.fxml"));
+			Parent orderDetailsPage = FXMLLoader.load(getClass().getResource("/Views/OrderView.fxml"));
 			Stage stage = (Stage) btndetails.getScene().getWindow();
-			stage.setScene(new Scene(cartPage));
+			stage.setScene(new Scene(orderDetailsPage));
 			stage.show();
 		} catch (Exception e) {
-			System.err.println("Failed to load cart page: " + e.getMessage());
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}

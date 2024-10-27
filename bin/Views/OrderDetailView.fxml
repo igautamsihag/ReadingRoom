@@ -4,11 +4,11 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="Controllers.OrderDetailController">
-    <TableView fx:id="orderDetailTable">
+    <TableView fx:id="orderDetails">
         <columns>
-            <TableColumn fx:id="bookIdColumn" text="Book ID" />
-            <TableColumn fx:id="quantityColumn" text="Quantity" />
-            <TableColumn fx:id="priceColumn" text="Price" />
+            <TableColumn fx:id="bookId" text="Book ID" />
+            <TableColumn fx:id="quantity" text="Quantity" />
+            <TableColumn fx:id="price" text="Price" />
         </columns>
     </TableView>
 </AnchorPane>

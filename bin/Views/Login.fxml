@@ -46,7 +46,7 @@
          <children>
             <TextField fx:id="usernamelogin" layoutX="67.0" layoutY="229.0" prefHeight="38.0" prefWidth="286.0" promptText="Username" style="-fx-background-color: F5F5F5;" />
             <PasswordField fx:id="passwordlogin" layoutX="66.0" layoutY="334.0" prefHeight="38.0" prefWidth="289.0" promptText="Password" style="-fx-background-color: F5F5F5;" />
-            <Button fx:id="btnlogin" layoutX="176.0" layoutY="451.0" mnemonicParsing="false" onAction="#loginManager" prefHeight="46.0" prefWidth="95.0" style="-fx-background-color: black;" text="Log In" textFill="WHITE">
+            <Button fx:id="btnlogin" layoutX="176.0" layoutY="451.0" mnemonicParsing="false" onAction="#loginProcess" prefHeight="46.0" prefWidth="95.0" style="-fx-background-color: black;" text="Log In" textFill="WHITE">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
@@ -67,6 +67,7 @@
                   <Font name="Arial Bold" size="37.0" />
                </font>
             </Text>
+            <Label fx:id="labelerror" layoutX="67.0" layoutY="380.0" textFill="RED" text="" />
          </children>
       </AnchorPane>
    </center>

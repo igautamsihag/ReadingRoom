@@ -2,6 +2,7 @@ package Model;
 
 public class Book {
 
+	// book class attribute declaration
 	private int bookID;
 	private String title;
 	private String author;
@@ -9,6 +10,7 @@ public class Book {
 	private int quantity;
 	private int sold;
 	
+	// book class constructor method
 	public Book(String title, String author, int price, int quantity, int sold) {
 		this.title = title;
 		this.author = author;
@@ -17,6 +19,7 @@ public class Book {
 		this.sold = sold;
 	}
 	
+	// book class setter methods
 	public void setBookID(int bookID) {
 		this.bookID = bookID;
 	}
@@ -41,6 +44,7 @@ public class Book {
 		this.sold = sold;
 	}
 	
+	// book class getter methods
 	public int getBookID() {
 		return bookID;
 	}
